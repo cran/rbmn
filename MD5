@@ -1,5 +1,5 @@
-ff3c86563cf901c903af0047c0ed9bdc *DESCRIPTION
-651108b3166a1e0c0bf2d5fc9e1696f5 *NAMESPACE
+5b86aeb982f235c0ae27f5c512c94106 *DESCRIPTION
+7e8b123ce305ef6829ae84421f5c0a2a *NAMESPACE
 f46184a63a801e1dd09ff0c72dbb5c10 *R/f00.rbsb.code.r
 05e8b5c875c68e6e3ad7db87b5b8f0bf *R/f01.auxi.code.r
 3f42e4925af9df5a02f73a9babc18886 *R/f02.chain.code.r
@@ -11,7 +11,7 @@ ee8f326e18e674fdaf73dcb349dae481 *R/f04.nbneq.code.r
 5fe9df0f88bc3cf5d756bc7a11f89e29 *R/f08.crossed.code.r
 96fe63ec7661e2b44d1fff68c6ca19a7 *R/f09.misc.code.r
 7141dbd56b380cf4d0bd7ac7af0eb477 *R/f10.objets.code.r
-ff1233e18bbff9d51352c8e3f655ea88 *R/f11.interface.code.r
+223a69f936950a53f4d261d8aee1fad6 *R/f11.interface.code.r
 552dacb15f2019c8f3f74c55befa242c *R/zzz.R
 d71564703c4b464971c292511ae5ab73 *data/boco.rda
 05e8b5c875c68e6e3ad7db87b5b8f0bf *inst/original/auxi.code.r

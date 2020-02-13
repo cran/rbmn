@@ -26,7 +26,7 @@ bnfit2nbn <- function(bn.fit)
 #--------------------------------------------
 {
   # checking
-  if (class(bn.fit) != "bn.fit") {
+  if (!inherits(bn.fit, "bn.fit")) {
     r.erreur(bn.fit,message="This object is not of class 'bn.fit'");
   }
   # initializing the resulting object
@@ -79,8 +79,8 @@ bn2nbn <- function(bn)
 #--------------------------------------------
 {
   # checking
-  if (class(bn) != "bn") {
-    r.erreur(bn.fit,message="This object is not of class 'bn'");
+  if (!inherits(bn, "bn")) {
+    r.erreur(bn,message="This object is not of class 'bn'");
   }
   nono <- bn$nodes
   # initializing the resulting object
@@ -129,10 +129,11 @@ nbn2bnfit <- function(nbn,onlydag=FALSE)
 #--------------------------------------------
 {
   # checking
-  ## to be done
+  if (!requireNamespace("bnlearn"))
+    stop("this function requires the bnlearn package.")
   # creating the dag
   mod <- string7dag4nbn(nbn,":");
-  dag <- model2network(mod);
+  dag <- bnlearn::model2network(mod);
   if (onlydag) { return(dag);}
   # incorporating the parameters
   prodis <- vector("list",0);
@@ -148,7 +149,7 @@ nbn2bnfit <- function(nbn,onlydag=FALSE)
   }
   names(prodis) <- names(nbn);
   # creating the bnfit
-  res <- custom.fit(dag,dist=prodis);
+  res <- bnlearn::custom.fit(dag,dist=prodis);
   # returning
   res;
 }

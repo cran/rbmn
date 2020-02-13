@@ -86,3 +86,8 @@ export(
        rbmn0gema.05,
        rbmn0crarc.05
       );
+
+importFrom("stats", "anova", "as.formula", "coefficients", "lm", "rbinom",
+  "rnorm", "runif")
+importFrom("utils", "head", "tail")
+importFrom("MASS", "mvrnorm")
