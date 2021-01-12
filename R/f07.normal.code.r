@@ -7,7 +7,7 @@ cor4var <- function(ma)
 #DETAILS
 # Zero variances are detected and accepted (all associated correlation
 # coefficients are forced to be zero.>>
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{ma}<< The variance matrix.>>
 #[INPUTS]
@@ -43,7 +43,7 @@ var2pre <- function(ma)
 #DETAILS
 # Non full rank matrices are accepted, a generalized inverse
 # is returned and a warning is issued.
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{ma}<< The variance matrix.>>
 #[INPUTS]
@@ -85,20 +85,20 @@ var2pre <- function(ma)
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-condi4joint <- function(mn,par,pour,x2=rep(0,length(pour))) 
+condi4joint <- function(mn,par,pour,x2=NULL)
 #TITLE computes some conditional distribution of
 # a multinormal vector
 #DESCRIPTION returns the expectation and
 # variance of a sub-vector conditionned
 # with another (non overlapping) sub-vector
-# from an initial random vector described 
+# from an initial random vector described
 # by \code{mn}.
 #DETAILS
 # when no names are given to \code{mn$mu},
 # \code{par} and \code{pour} are supposed
 # containing indices and default sequential
 # names are provided.
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{mn}<< list defining the distribution of
 #       the initial vector with \code{$mu},
@@ -121,8 +121,8 @@ condi4joint <- function(mn,par,pour,x2=rep(0,length(pour)))
 #      two components: \code{$mu} for the expectation vector
 #      and \code{$gamma} for the variance matrix.\cr
 # when \code{x2} is \code{NULL} the list has got three
-#      components: \code{$a} for the fixed part of the
-#      expectation vector, \code{$b} for the regression
+#      components: \code{$mu} for the fixed part of the
+#      expectation vector, \code{$rho} for the regression
 #      coefficients to be associated to the non precised
 #      \code{x2} values, varying part of the expectation
 #      and \code{$gamma} for the variance matrix.\cr
@@ -152,7 +152,7 @@ condi4joint <- function(mn,par,pour,x2=rep(0,length(pour)))
     dimnames(mn$gamma) <- list(va,va);
   }
   if (length(intersect(par,pour)) > 0) { stop("parpour");}
-  #  
+  #
   if (n1==0) {
     if (is.null(x2)) {
       res <- list(mu=numeric(n1),
@@ -202,7 +202,7 @@ condi4joint <- function(mn,par,pour,x2=rep(0,length(pour)))
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-mn4joint1condi <- function(lmar,lcon) 
+mn4joint1condi <- function(lmar,lcon)
 #TITLE computes a joint distribution from a marginal and a conditional
 #  one for multinormal distributions
 #DESCRIPTION returns the expectation and
@@ -215,7 +215,7 @@ mn4joint1condi <- function(lmar,lcon)
 # part of the expectation; \code{$b} for the
 # regression coefficient part of the expectation;
 # and \code{$S} for the residual variance matrix.
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{lmar}<< list defining the distribution of
 #       the marginal part with \code{$mu},
@@ -311,17 +311,17 @@ mn4joint1condi <- function(lmar,lcon)
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-simulate8mn <- function(mn,nbs,tol=1e-7) 
+simulate8mn <- function(mn,nbs,tol=1e-7)
 #TITLE simulates a multinormal vector
 #DESCRIPTION returns a matrix of simulated
-# values with the variable in columns and the 
+# values with the variable in columns and the
 # simulations in rows.
 #DETAILS
 # Just a call to the basic function \code{mvrnorm}.
 # Names of the variables are taken from those of
 # \code{mn$mu}, when these does not exist, standard
 # ones are provided.
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{mn}<< list defining the distribution of
 #       the initial vector with \code{$mu},
@@ -347,7 +347,7 @@ simulate8mn <- function(mn,nbs,tol=1e-7)
 {
   # number of variables and their names
   nbv <- length(mn$mu);
-  # 
+  #
   if (is.null(names(mn$mu))) {
     va <- paste("V",as.character(r.bc(nbv)),sep="");
   } else {
@@ -372,15 +372,15 @@ simulate8mn <- function(mn,nbs,tol=1e-7)
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-simulate8gmn <- function(loi,cova,nbs,tol=1e-7) 
+simulate8gmn <- function(loi,cova,nbs,tol=1e-7)
 #TITLE simulates a multinormal vector with varying expectation
 #DESCRIPTION returns a matrix of simulated
-# values with the variable in columns and the 
+# values with the variable in columns and the
 # simulations in rows.
 #DETAILS
 # Just a call to the function \code{simulate8mn},
 # adding the terms to the expectation due to the regression...
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{loi}<< list defining the distribution of
 #       the initial vector with \code{$mu},
@@ -458,11 +458,11 @@ print8mn <- function(mn,what="msC",ordering=NULL,
 #DESCRIPTION prints a /mn/ object completely
 # or a part of it.
 #DETAILS
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{mn} <<\code{mn} object to be printed.>>
 #[INPUTS]
-#{what} <<a \code{character(1)}; when comprising "m" the 
+#{what} <<a \code{character(1)}; when comprising "m" the
 #         expectations are printed, "s" the standard deviations
 #         are printed, "C" the correlation matrix is printed,
 #         "S" the variance matrix is printed,
@@ -548,7 +548,7 @@ print8mn <- function(mn,what="msC",ordering=NULL,
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 dev4mn <- function(Y,EY,VY)
 #TITLE Computes the deviance for a sample of multinormal vector
-#DESCRIPTION 
+#DESCRIPTION
 # From the \code{n} observed values of a vector of size \code{p} (Y),
 # their expectations (EY) and the
 # variance matrix (VY) supposed identical for all vectors,
@@ -556,14 +556,14 @@ dev4mn <- function(Y,EY,VY)
 #DETAILS
 # When \code{EY} is a vector with length \code{ncol(Y)} this
 # supposes that all observations have the same expectation.
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{Y} <<Matrix \code{nxp} of the \code{n} observed values of length \code{p}.>>
 #{EY}<<Expectation of \code{Y} (matrix \code{nxp} or vector \code{p}).>>
 #{VY}<<Matrix of the variance of each row of \code{Y} (matrix \code{pxp}).>>
 #[INPUTS]
 #VALUE
-# A scalar 
+# A scalar
 #EXAMPLE
 # dev4mn(matrix(runif(3),1),t(rbmn0mn.01$mu),rbmn0mn.01$gamma);
 #REFERENCE

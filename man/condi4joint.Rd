@@ -9,7 +9,7 @@ with another (non overlapping) sub-vector from an initial random
 vector described by \code{mn}.
 }
 \usage{
-condi4joint(mn, par, pour, x2=rep(0, length(pour)))
+condi4joint(mn, par, pour, x2=NULL)
 }
 \examples{
  print8mn(condi4joint(rbmn0mn.04, c("1.1", "2.2", "1.2", "2.1"), NULL));
@@ -36,7 +36,7 @@ A list:\cr when \code{x2} provides the values taken by the
 conditioning part, it is a /mn/ object with its two components:
 \code{$mu} for the expectation vector and \code{$gamma} for the
 variance matrix.\cr when \code{x2} is \code{NULL} the list has got
-three components: \code{$a} for the fixed part of the expectation
+three components: \code{$mu} for the fixed part of the expectation
 vector, \code{$b} for the regression coefficients to be associated to
 the non precised \code{x2} values, varying part of the expectation
 and \code{$gamma} for the variance matrix.\cr
