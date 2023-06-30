@@ -8,7 +8,7 @@ checks the consistency of \code{nbn} as a /nbn/ object issues a fatal
 error with some clues if inconsistent.
 }
 \usage{
-check8nbn(nbn)
+check8nbn(nbn, sto = FALSE)
 }
 \examples{
  check8nbn(rbmn0nbn.01);
@@ -17,6 +17,8 @@ check8nbn(nbn)
 }
 \arguments{
 \item{nbn}{ The \code{nbn} object to check.}
+\item{sto}{ If 'TRUE', the possible error is displayed and the process is
+  stopped. If 'FALSE', the possible error is returned as a character. }
 }
 \details{
 Looking a the code of this function provides a way to know which are

@@ -25,13 +25,13 @@ cor4var <- function(ma)
 #REVISED 12_07_31
 #--------------------------------------------
 {
-  dd <- 1/sqrt(diag(ma));
-  dd[diag(ma)<=0] <- 0;
-  dd <- diag(dd,nrow=length(dd));
-  res <- dd %*% ma %*% dd;
-  dimnames(res) <- dimnames(ma);
+  dd <- 1/sqrt(diag(ma))
+  dd[diag(ma)<=0] <- 0
+  dd <- diag(dd,nrow=length(dd))
+  res <- dd %*% ma %*% dd
+  dimnames(res) <- dimnames(ma)
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -62,25 +62,25 @@ var2pre <- function(ma)
 #--------------------------------------------
 {
   # constant
-  eps <- 10^-10;
+  eps <- 10^-10
   # a look to the rank
-  sivadi <- eigen(ma,symmetric=TRUE);
-  nbv <- sum(sivadi$values > eps);
+  sivadi <- eigen(ma,symmetric=TRUE)
+  nbv <- sum(sivadi$values > eps)
   if (nbv < nrow(ma)) {
     # issuing the warning
     r.erreur(NULL,message=
            paste("The matrix was found singular (rank = ",
                  nbv," < ",nrow(ma),") then a generalized inverse was provided",
-                 sep=""));
+                 sep=""))
     # computing the generalized inverse
     res <- sivadi$vectors[,r.bc(nbv)] %*%
            diag(1/sivadi$values[r.bc(nbv)],nrow=nbv,ncol=nbv) %*%
-           t(sivadi$vectors[,r.bc(nbv)]);
+           t(sivadi$vectors[,r.bc(nbv)])
   } else {
-    res <- solve(ma);
+    res <- solve(ma)
   }
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -141,15 +141,15 @@ condi4joint <- function(mn,par,pour,x2=NULL)
 #--------------------------------------------
 {
   # lengths of the involved vectors
-  n <- length(mn$mu); n1 <- length(par); n2 <- length(pour);
+  n <- length(mn$mu); n1 <- length(par); n2 <- length(pour)
   if (n1+n2>n) { stop("mu.parpour");}
   # naming if necessary
   if (is.null(names(mn$mu))) {
-    va <- paste("V",as.character(1:n),sep="");
-    par <- va[par];
-    pour <- va[pour];
-    names(mn$mu) <- va;
-    dimnames(mn$gamma) <- list(va,va);
+    va <- paste("V",as.character(1:n),sep="")
+    par <- va[par]
+    pour <- va[pour]
+    names(mn$mu) <- va
+    dimnames(mn$gamma) <- list(va,va)
   }
   if (length(intersect(par,pour)) > 0) { stop("parpour");}
   #
@@ -158,46 +158,46 @@ condi4joint <- function(mn,par,pour,x2=NULL)
       res <- list(mu=numeric(n1),
                   rho=matrix(NA,n1,n2,dimnames=list(par,pour)),
                   gamma=matrix(NA,n1,n1)
-                 );
+                 )
     } else {
       res <- list(mu=numeric(n1),
                   gamma=matrix(NA,n1,n1)
-                 );
+                 )
     }
   } else {
     if (n2==0) {
       if (is.null(x2)) {
         res <- list(mu=mn$mu[par],
                     rho=matrix(NA,n1,n2,dimnames=list(par,pour)),
-                    gamma=mn$gamma[par,par]);
+                    gamma=mn$gamma[par,par])
       } else {
-        res <- list(mu=mn$mu[par],gamma=mn$gamma[par,par]);
+        res <- list(mu=mn$mu[par],gamma=mn$gamma[par,par])
       }
     } else {
-      mu1 <- mn$mu[par];
-      mu2 <- mn$mu[pour];
-      s11 <- mn$gamma[par,par,drop=FALSE];
-      s12 <- mn$gamma[par,pour,drop=FALSE];
-      s22 <- mn$gamma[pour,pour,drop=FALSE];
-      ss12 <- s12 %*% solve(s22);
-      si <- s11 - ss12 %*% t(s12);
+      mu1 <- mn$mu[par]
+      mu2 <- mn$mu[pour]
+      s11 <- mn$gamma[par,par,drop=FALSE]
+      s12 <- mn$gamma[par,pour,drop=FALSE]
+      s22 <- mn$gamma[pour,pour,drop=FALSE]
+      ss12 <- s12 %*% solve(s22)
+      si <- s11 - ss12 %*% t(s12)
       if (is.null(x2)) {
-        ac <- mu1 - ss12 %*% matrix(mu2,n2,1);
-        ac <- as.vector(ac);
-        names(ac) <- par;
+        ac <- mu1 - ss12 %*% matrix(mu2,n2,1)
+        ac <- as.vector(ac)
+        names(ac) <- par
         res <- list(mu=ac,
                     rho=ss12,
-                    gamma=si);
+                    gamma=si)
       } else {
-        mu <- mu1 + ss12 %*% matrix(as.numeric(x2-mu2),length(pour),1);
-        mun <- as.vector(mu);
-        names(mun) <- par;
-        res <- list(mu=mun,gamma=si);
+        mu <- mu1 + ss12 %*% matrix(as.numeric(x2-mu2),length(pour),1)
+        mun <- as.vector(mu)
+        names(mun) <- par
+        res <- list(mu=mun,gamma=si)
       }
     }
   }
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -249,64 +249,64 @@ mn4joint1condi <- function(lmar,lcon)
 #--------------------------------------------
 {
   # getting constants
-  nv <- length(lmar$mu);
-  nu <- length(lcon$a);
+  nv <- length(lmar$mu)
+  nu <- length(lcon$a)
   # degenerate cases
   if (nu == 0) {
-    return(lmar);
+    return(lmar)
   }
   if (nv == 0) {
-    return(list(mu=lcon$a,gamma=lcon$S));
+    return(list(mu=lcon$a,gamma=lcon$S))
   }
   # non matrix cases
   if (nv == 1) {
     if (!is.matrix(lmar$gamma)) {
-      lmar$gamma <- matrix(lmar$gamma,nv,nv);
+      lmar$gamma <- matrix(lmar$gamma,nv,nv)
     }
     if (!is.matrix(lcon$b)) {
-      lcon$b <- matrix(lcon$b,nu,nv);
+      lcon$b <- matrix(lcon$b,nu,nv)
     }
   }
   if (nu == 1) {
     if (!is.matrix(lcon$S)) {
-      lcon$S <- matrix(lcon$S,nu,nu);
+      lcon$S <- matrix(lcon$S,nu,nu)
     }
     if (!is.matrix(lcon$b)) {
-      lcon$b <- matrix(lcon$b,nu,nv);
+      lcon$b <- matrix(lcon$b,nu,nv)
     }
   }
   # general case
   if (is.null(names(lmar$mu))) {
-    vam <- paste("M",as.character(1:nv),sep="");
-    names(lmar$mu) <- vam;
-    dimnames(lmar$gamma) <- list(vam,vam);
+    vam <- paste("M",as.character(1:nv),sep="")
+    names(lmar$mu) <- vam
+    dimnames(lmar$gamma) <- list(vam,vam)
   } else {
-    vam <- names(lmar$mu);
+    vam <- names(lmar$mu)
   }
   if (is.null(names(lcon$a))) {
-    vac <- paste("C",as.character(1:nu),sep="");
-    names(lcon$a) <- vac;
-    dimnames(lcon$b) <- list(vac,vam);
-    dimnames(lcon$S) <- list(vac,vac);
+    vac <- paste("C",as.character(1:nu),sep="")
+    names(lcon$a) <- vac
+    dimnames(lcon$b) <- list(vac,vam)
+    dimnames(lcon$S) <- list(vac,vac)
   } else {
-    vac <- names(lcon$a);
+    vac <- names(lcon$a)
   }
   # a limited check
   if (length(intersect(vac,vam)) > 0) { stop("Overlap!");}
   # the computation
-  n <- nv+nu;
-  mu <- lcon$a + lcon$b %*% lmar$mu;
-  mu <- c(lmar$mu,mu);
-  s22 <- lcon$S + lcon$b %*% lmar$gamma %*% t(lcon$b);
-  s12 <- lcon$b %*% lmar$gamma;
-  gamma <- rbind(t(s12),s22);
+  n <- nv+nu
+  mu <- lcon$a + lcon$b %*% lmar$mu
+  mu <- c(lmar$mu,mu)
+  s22 <- lcon$S + lcon$b %*% lmar$gamma %*% t(lcon$b)
+  s12 <- lcon$b %*% lmar$gamma
+  gamma <- rbind(t(s12),s22)
   gamma <- cbind(rbind(lmar$gamma,s12),
-                 gamma);
-  names(mu) <- c(vam,vac);
-  dimnames(gamma) <- list(c(vam,vac),c(vam,vac));
+                 gamma)
+  names(mu) <- c(vam,vac)
+  dimnames(gamma) <- list(c(vam,vac),c(vam,vac))
   #
-  res <- list(mu=mu,gamma=gamma);
-  res;
+  res <- list(mu=mu,gamma=gamma)
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -346,28 +346,28 @@ simulate8mn <- function(mn,nbs,tol=1e-7)
 #--------------------------------------------
 {
   # number of variables and their names
-  nbv <- length(mn$mu);
+  nbv <- length(mn$mu)
   #
   if (is.null(names(mn$mu))) {
-    va <- paste("V",as.character(r.bc(nbv)),sep="");
+    va <- paste("V",as.character(r.bc(nbv)),sep="")
   } else {
-    va <- names(mn$mu);
+    va <- names(mn$mu)
   }
   # number of simulations
-  nbs <- round(max(0,nbs));
+  nbs <- round(max(0,nbs))
   # simulating
   if (nbv*nbs > 1) {
-    res <- mvrnorm(nbs,mn$mu,mn$gamma,tol=tol);
+    res <- mvrnorm(nbs,mn$mu,mn$gamma,tol=tol)
     if (nbs == 1) {
-      res <- matrix(res,nbs,nbv);
+      res <- matrix(res,nbs,nbv)
     }
   } else {
-    res <- matrix(NA,nbs,nbv);
+    res <- matrix(NA,nbs,nbv)
   }
   # adding the variable names
-  dimnames(res) <- list(NULL,va);
+  dimnames(res) <- list(NULL,va)
   # returning
-  as.data.frame(res);
+  as.data.frame(res)
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -417,37 +417,37 @@ simulate8gmn <- function(loi,cova,nbs,tol=1e-7)
 #--------------------------------------------
 {
   # simulating the constant part
-  res <- simulate8mn(loi,nbs,tol);
+  res <- simulate8mn(loi,nbs,tol)
   # adding the regression part
   if (!is.null(loi$rho)) { if (ncol(loi$rho) > 0) {
-    nco <- dimnames(loi$rho)[[2]];
+    nco <- dimnames(loi$rho)[[2]]
     if (!is.null(nco)) {
-      nco <- r.bc(ncol(loi$rho));
+      nco <- r.bc(ncol(loi$rho))
     }
     if (is.matrix(cova)) {
       if (ncol(cova) != length(nco)) {
-        stop("'cova' and 'loi$rho' column lengths are not consistent");
+        stop("'cova' and 'loi$rho' column lengths are not consistent")
       }
-      nco2 <- dimnames(loi$rho)[[2]];
+      nco2 <- dimnames(loi$rho)[[2]]
       if (!is.null(nco2)) {
-        nco2 <- r.bc(ncol(loi$rho));
+        nco2 <- r.bc(ncol(loi$rho))
       }
       if (!all(nco==nco2)) {
-        stop("'cova' and 'loi$rho' column names are not consistent");
+        stop("'cova' and 'loi$rho' column names are not consistent")
       }
       if (nrow(cova) != nbs) {
-        stop("'cova' row number is not 'nbs'");
+        stop("'cova' row number is not 'nbs'")
       }
     } else {
       if (length(cova) != length(nco)) {
-        stop("'cova' and 'loi$rho' lengths are not consistent");
+        stop("'cova' and 'loi$rho' lengths are not consistent")
       }
-      cova <- matrix(rep(as.numeric(cova),each=nbs),nbs);
+      cova <- matrix(rep(as.numeric(cova),each=nbs),nbs)
     }
-    res <- res + cova %*% t(loi$rho);
+    res <- res + cova %*% t(loi$rho)
   }}
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -492,55 +492,55 @@ print8mn <- function(mn,what="msC",ordering=NULL,
   # checking
   # < to be done >
   # number of nodes
-  nn <- length(mn$mu);
-  nam <- names(mn$mu);
+  nn <- length(mn$mu)
+  nam <- names(mn$mu)
   if (nn!=length(nam)) {
-    r.erreur(mn$mu,message="'mn$mu' must be a named vector");
+    r.erreur(mn$mu,message="'mn$mu' must be a named vector")
   }
   # getting the ordering for the nodes
-  ordering <- aux3(nam,ordering);
-  nnr <- length(ordering);
-  namr <- nam[ordering];
+  ordering <- aux3(nam,ordering)
+  nnr <- length(ordering)
+  namr <- nam[ordering]
   # initializing
-  cnam <- character(0);
-  res <- matrix(NA,nnr,0);
+  cnam <- character(0)
+  res <- matrix(NA,nnr,0)
   # printing each asked option
   if (r.expr3present("m",what)) {
-    cnam <- c(cnam,"mu");
-    res <- cbind(res,mn$mu[ordering]);
+    cnam <- c(cnam,"mu")
+    res <- cbind(res,mn$mu[ordering])
   }
   if (r.expr3present("s",what)) {
-    cnam <- c(cnam,"s.d.");
-    res <- cbind(res,sqrt(diag(mn$gamma[ordering,ordering,drop=FALSE])));
+    cnam <- c(cnam,"s.d.")
+    res <- cbind(res,sqrt(diag(mn$gamma[ordering,ordering,drop=FALSE])))
   }
   if (r.expr3present("C",what)) { if (nnr > 1) {
-    cnam <- c(cnam,paste("C.",namr,sep=""));
-    res <- cbind(res,cor4var(mn$gamma[ordering,ordering,drop=FALSE]));
+    cnam <- c(cnam,paste("C.",namr,sep=""))
+    res <- cbind(res,cor4var(mn$gamma[ordering,ordering,drop=FALSE]))
   }}
   if (r.expr3present("S",what)) {
-    cnam <- c(cnam,paste("V.",namr,sep=""));
-    res <- cbind(res,mn$gamma[ordering,ordering,drop=FALSE]);
+    cnam <- c(cnam,paste("V.",namr,sep=""))
+    res <- cbind(res,mn$gamma[ordering,ordering,drop=FALSE])
   }
   if (r.expr3present("P",what)) {
-    cnam <- c(cnam,paste("P.",namr,sep=""));
-    res <- cbind(res,var2pre(mn$gamma[ordering,ordering,drop=FALSE]));
+    cnam <- c(cnam,paste("P.",namr,sep=""))
+    res <- cbind(res,var2pre(mn$gamma[ordering,ordering,drop=FALSE]))
   }
   if (r.expr3present("p",what)) {
-    cnam <- c(cnam,paste("PC.",namr,sep=""));
-    res <- cbind(res,cor4var(var2pre(mn$gamma[ordering,ordering,drop=FALSE])));
+    cnam <- c(cnam,paste("PC.",namr,sep=""))
+    res <- cbind(res,cor4var(var2pre(mn$gamma[ordering,ordering,drop=FALSE])))
   }
   # dimnaming
-  dimnames(res)[[2]] <- cnam;
+  dimnames(res)[[2]] <- cnam
   # rounding
   if (!is.null(digits)) {
-    res <- round(res,digits);
+    res <- round(res,digits)
   }
   # returning
   if (printed) {
-    print(res);
-    invisible();
+    print(res)
+    invisible()
   } else {
-    return(res);
+    return(res)
   }
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -578,35 +578,35 @@ dev4mn <- function(Y,EY,VY)
 {
   # checking 1
   if (!(is.matrix(Y) | is.data.frame(Y))) {
-    stop("'Y' must be a data.frame or a matrix");
+    stop("'Y' must be a data.frame or a matrix")
   }
   if (length(EY) == ncol(Y)) {
-    EY <- matrix(rep(EY,each=nrow(Y)),nrow(Y));
+    EY <- matrix(rep(EY,each=nrow(Y)),nrow(Y))
   }
   if (!is.matrix(EY)) { stop("'EY' must be a matrix");}
   if (!is.matrix(VY)) { stop("'VY' must be a matrix");}
   # size of the vector
-  pp <- ncol(Y);
+  pp <- ncol(Y)
   # checking 2
   if (!all(dim(Y)==dim(EY))) {
-    stop("'Y' and 'EY' don't have the same dimensions");
+    stop("'Y' and 'EY' don't have the same dimensions")
   }
   if (!all(dim(VY)==rep(pp,2))) {
-    stop("'VY' doesn't have the consistent dimensions");
+    stop("'VY' doesn't have the consistent dimensions")
   }
   # computing the precision matrix
-  S1 <- solve(VY);
+  S1 <- solve(VY)
   # residuals
-  del <- Y-EY;
+  del <- Y-EY
   # computing the quadratic part
-  qua <- 0;
+  qua <- 0
   for (ii in r.bc(nrow(Y))) {
-    deli <- matrix(as.numeric(del[ii,,drop=FALSE]),nrow=1);
-    qua <- qua + deli %*% S1 %*% t(deli);
+    deli <- matrix(as.numeric(del[ii,,drop=FALSE]),nrow=1)
+    qua <- qua + deli %*% S1 %*% t(deli)
   }
   # computing the "constant" part
-  kon <- determinant(VY)$modulus + pp*log(2*pi);
+  kon <- determinant(VY)$modulus + pp*log(2*pi)
   # returning
-  nrow(Y)*kon + qua;
+  nrow(Y)*kon + qua
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

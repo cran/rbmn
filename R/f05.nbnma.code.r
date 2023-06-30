@@ -11,7 +11,7 @@ order4nbn <- function(nbn,ord=NULL)
 #DETAILS
 # When \code{!is.null(ord)} the order must be an order, if
 # not an error is issued.
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{nbn} <<\code{nbn} object for which the order must be computed.>>
 #[INPUTS]
@@ -27,33 +27,33 @@ order4nbn <- function(nbn,ord=NULL)
 #SEE ALSO
 #CALLING
 #COMMENT
-#FUTURE 
+#FUTURE
 #AUTHOR J.-B. Denis
 #CREATED 12_01_14
 #REVISED 13_07_05
 #--------------------------------------------
 {
   # basic constants
-  nn <- length(nbn);
-  nam <- names(nbn);
+  nn <- length(nbn)
+  nam <- names(nbn)
   # checking
   for (ii in r.bc(nn)) {
     if (length(union(nam,nbn[[ii]]$parents))!= nn) {
       r.erreur(list(nam,nbn[[ii]]$parents),
-             message="Unknown Parents");
+             message="Unknown Parents")
     }
   }
   # processing
   if (is.null(ord)) {
     # getting a topological order
-    res <- numeric(0);
+    res <- numeric(0)
     while (length(res) < nn) {
       for (ii in r.bc(nn)) {
         if (!(ii %in% res)) {
-          pare <- nbn[[ii]]$parents;
+          pare <- nbn[[ii]]$parents
           # if its parents are already included, it can be added
           if (length(union(nam[res],pare))==length(res)) {
-            res <- c(res,ii);
+            res <- c(res,ii)
           }
         }
       }
@@ -61,25 +61,25 @@ order4nbn <- function(nbn,ord=NULL)
   } else {
     # checking the proposed order
     # translating 'ord' as numeric if character
-    if (is.character(ord)) { nord <- r.numero(ord,nam);
+    if (is.character(ord)) { nord <- r.numero(ord,nam)
     } else { nord <- ord;}
     # checking it is a permutation
     if (!all(sort(nord)==1:nn)) {
         r.erreur(ord,message="'ord' is not a permutation.")
     }
     # checking the order
-    res <- TRUE; 
-    parents <- character(0);
+    res <- TRUE;
+    parents <- character(0)
     for (ii in r.bc(nn)) {
-      pare <- nbn[[nord[ii]]]$parents;
+      pare <- nbn[[nord[ii]]]$parents
       if (length(union(pare,parents))>length(parents)) {
-        res <- FALSE;
+        res <- FALSE
       }
-    parents <- union(parents,nam[ii]);
+    parents <- union(parents,nam[ii])
     }
   }
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -95,7 +95,7 @@ order4gema <- function(gema,ord=NULL)
 #DETAILS
 # When \code{!is.null(ord)} the order must be an order, if
 # not an error is issued.
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{gema} <<\code{gema} object for which the order must be computed.>>
 #[INPUTS]
@@ -119,56 +119,56 @@ order4gema <- function(gema,ord=NULL)
 {
   # checking
   # < to be done >
-  eps <- 10^-10;
-  li <- gema$li;
+  eps <- 10^-10
+  li <- gema$li
   # number of nodes
-  nn <- nrow(li);
-  nam <- dimnames(li)[[1]];
+  nn <- nrow(li)
+  nam <- dimnames(li)[[1]]
   if (is.null(ord)) {
     # getting the order
-    res <- numeric(0);
+    res <- numeric(0)
     while (length(res) < nn) {
       for (ii in r.bc(nn)) {
         if (!(ii %in% res)) {
-          nbpar <- sum(abs(li[ii,])>eps) - 1;
+          nbpar <- sum(abs(li[ii,])>eps) - 1
           if (nbpar==0) {
-            res <- c(res,ii);
-            li[,ii] <- 0;
+            res <- c(res,ii)
+            li[,ii] <- 0
           }
         }
       }
     }
   } else {
-    return("Sorry, the 'ord' option is wrong and must be corrected!");
+    return("Sorry, the 'ord' option is wrong and must be corrected!")
     # checking the proposed permutation
     if (is.numeric(ord)) {
       if (length(union(ord,r.bc(nn)))!=nn) {
         r.erreur(ord,message="'ord' is not a permutation.")
       }
-      ord <- nam[ord];
+      ord <- nam[ord]
     } else {
       if (length(union(ord,nam))!=nn) {
         r.erreur(list(ord,nam),
-               message="'ord' is not a permutation of 'nam'");
+               message="'ord' is not a permutation of 'nam'")
       }
     }
     # checking the order
-    res <- vector("list",0); kk <- 0; nm <- character(0);
-    parents <- character(0);
+    res <- vector("list",0); kk <- 0; nm <- character(0)
+    parents <- character(0)
     for (ii in r.bc(nn)) {
-      parents <- c(parents,nam[ii]);
-      wpar <- which(abs(gema$li[ii,])>eps);
-      pare <- nam[wpar];
+      parents <- c(parents,nam[ii])
+      wpar <- which(abs(gema$li[ii,])>eps)
+      pare <- nam[wpar]
       if (length(union(pare,parents))>length(parents)) {
-        kk <- kk + 1;
-        res[[kk]] <- pare;
-        nm <- c(nm,nam[ii]);
-        names(res) <- nm;
+        kk <- kk + 1
+        res[[kk]] <- pare
+        nm <- c(nm,nam[ii])
+        names(res) <- nm
       }
     }
   }
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -206,50 +206,50 @@ normalize8nbn <- function(nbn,mu=0,sigma=1)
 #--------------------------------------------
 {
   # number of nodes
-  nn <- length(nbn);
-  nna <- names(nbn);
+  nn <- length(nbn)
+  nna <- names(nbn)
   # developping the mu and sigma
   if (length(mu)==1) {
-    mu <- rep(mu,nn);
+    mu <- rep(mu,nn)
   }
   if (length(sigma)==1) {
-    sigma <- rep(sigma,nn);
+    sigma <- rep(sigma,nn)
   }
   # going to the gema form
-  gema <- nbn2gema(nbn);
+  gema <- nbn2gema(nbn)
   # getting the mn form
-  mn <- gema2mn(gema);  
+  mn <- gema2mn(gema);
   # computing the actual mu and sigma
-  mu0 <- mn$mu;
-  sigma0 <- sqrt(diag(mn$gamma));
+  mu0 <- mn$mu
+  sigma0 <- sqrt(diag(mn$gamma))
   # transforming accordingly the gema
   if (!is.null(mu)) {
-    gema$mu <- mu;
+    gema$mu <- mu
   }
   if (!is.null(sigma)) {
     if (!all(sigma>0)) {
-      r.erreur(sigma,message="asked standard deviation(s) are not positive");
+      r.erreur(sigma,message="asked standard deviation(s) are not positive")
     }
-    gema$li <- diag(sigma/sigma0,nrow=nn) %*% gema$li;
+    gema$li <- diag(sigma/sigma0,nrow=nn) %*% gema$li
   }
-  names(gema$mu) <- nna;
-  dimnames(gema$li) <- list(nna,NULL);
+  names(gema$mu) <- nna
+  dimnames(gema$li) <- list(nna,NULL)
   # back to the nbn
-  res <- gema2nbn(gema);
+  res <- gema2nbn(gema)
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 nbn4nbn <- function(nbn)
 #TITLE From a /nbn/ computes the associated nbn1
-#DESCRIPTION returns a /nbn/ object with the 
+#DESCRIPTION returns a /nbn/ object with the
 # same structure as \code{nbn} but all \code{$mu}
 # are put to zero, all \code{$sigma} to one as well
 # as \code{$regcof}.
 #DETAILS
-# These coefficient values allows the easy study of the   
+# These coefficient values allows the easy study of the
 # /nbn/ structure.
 #KEYWORDS
 #INPUTS
@@ -273,23 +273,23 @@ nbn4nbn <- function(nbn)
   # <to be done>
   # modification
   for (no in r.bf(nbn)) {
-    nbn[[no]]$mu <- 0;
-    nbn[[no]]$sigma <- 1;
-    nbn[[no]]$regcoef[] <- 1;
+    nbn[[no]]$mu <- 0
+    nbn[[no]]$sigma <- 1
+    nbn[[no]]$regcoef[] <- 1
   }
   # returning
-  nbn;
+  nbn
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-adja4nbn <- function(nbn) 
+adja4nbn <- function(nbn)
 #TITLE adjacency matrix of a /nbn/
 #DESCRIPTION returns a dimnamed matrix
 # indicating with 1 an arc from row to column nodes
 # (0 everywhere else); i.e. the adjacency matrix.
 #DETAILS
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{nbn}<< The initial \code{nbn} object.>>
 #[INPUTS]
@@ -310,28 +310,28 @@ adja4nbn <- function(nbn)
   # checking
   # To be done
   # getting the parentship matrix
-  nbno <- length(nbn);
-  nbna <- names(nbn);
-  res <- matrix(0,nbno,nbno);
-  dimnames(res) <- list(from=nbna,to=nbna);
+  nbno <- length(nbn)
+  nbna <- names(nbn)
+  res <- matrix(0,nbno,nbno)
+  dimnames(res) <- list(from=nbna,to=nbna)
   for (nn in r.bf(nbn)) {
     if (length(nbn[[nn]]$parents) > 0) {
-      res[match(nbn[[nn]]$parents,nbna),nn] <- 1;
+      res[match(nbn[[nn]]$parents,nbna),nn] <- 1
     }
   }
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-adja2nbn <- function(adja) 
+adja2nbn <- function(adja)
 #TITLE standardized /nbn/ from an adjacency matrix
 #DESCRIPTION returns a \code{nbn} object
 # with O/1 regression coefficients having \code{adja} as
 # adjacency matrix.
 #DETAILS
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{adja}<< The initial adjacency matrix.>>
 #[INPUTS]
@@ -352,32 +352,32 @@ adja2nbn <- function(adja)
   # checking
   # To be done
   # getting the parentship matrix
-  nbno <- nrow(adja);
-  nbna <- dimnames(adja)[[1]];
-  res <- vector("list",nbno);
-  names(res) <- nbna;
+  nbno <- nrow(adja)
+  nbna <- dimnames(adja)[[1]]
+  res <- vector("list",nbno)
+  names(res) <- nbna
   for (nn in r.bf(res)) {
-    res[[nn]]$mu <- 0;
-    res[[nn]]$sigma <- 1;
-    res[[nn]]$parents <- nbna[which(adja[,nn]==1)];
-    res[[nn]]$regcoef <- rep(1,length(res[[nn]]$parents));
+    res[[nn]]$mu <- 0
+    res[[nn]]$sigma <- 1
+    res[[nn]]$parents <- nbna[which(adja[,nn]==1)]
+    res[[nn]]$regcoef <- rep(1,length(res[[nn]]$parents))
   }
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 rm8nd4adja <- function(adja,nodes)
 #TITLE  removes somes nodes from an adjacency matrix
-#DESCRIPTION 
+#DESCRIPTION
 # Eliminates from the adjacency matrix (\code{adja})all \code{nodes}
 # not breaking the existing links.\cr
 # Important: the node order in \code{adja} must be topological.
 #DETAILS
 # When a node is removed, all its parents become parent of its children.
 #KEYWORDS utilities
-#PKEYWORDS 
+#PKEYWORDS
 #INPUTS
 #{adja} <<The relation matrix to be consider (same format as those
 #        provided by the function \code{adja4nbn}. Must be in topological
@@ -400,36 +400,36 @@ rm8nd4adja <- function(adja,nodes)
 #--------------------------------------------
 {
 # checking
-nbno <- nrow(adja);
+nbno <- nrow(adja)
 # the topological order
-masque <- outer(r.bc(nbno),r.bc(nbno),">=");
+masque <- outer(r.bc(nbno),r.bc(nbno),">=")
 if (sum(masque*adja^2) > 0) {
-  r.erreur(adja,message="Not a topological order");
+  r.erreur(adja,message="Not a topological order")
 }
 # < to be finished >
 # getting constants
-nano <- dimnames(adja)[[1]];
+nano <- dimnames(adja)[[1]]
 if (is.character(nodes)) {
-  nodes <- match(nodes,nano);
+  nodes <- match(nodes,nano)
 }
-nodes <- sort(unique(nodes),decreasing=TRUE);
-nbs <- length(nodes);
+nodes <- sort(unique(nodes),decreasing=TRUE)
+nbs <- length(nodes)
 # degenerate case
 if (nbno*nbs == 0) {
-  return(matrix(0,0,0));
+  return(matrix(0,0,0))
 }
 # removing starting from the leaves
 for (nod in nodes) {
-  nbc <- nrow(adja);
-  des <- r.bc(nbno)[adja[nod,]!=0];
-  asc <- r.bc(nbno)[adja[,nod]!=0];
+  nbc <- nrow(adja)
+  des <- r.bc(nbno)[adja[nod,]!=0]
+  asc <- r.bc(nbno)[adja[,nod]!=0]
   if (length(des)*length(asc)>0) {
-    adja[asc,des] <- 1;
+    adja[asc,des] <- 1
   }
-  adja <- adja[-nod,]; adja <- adja[,-nod];
+  adja <- adja[-nod,]; adja <- adja[,-nod]
 }
 # returning
-adja;
+adja
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -442,7 +442,7 @@ rm8nd4nbn <- function(nbn,nodes)
 #DETAILS
 # The transformation is made through the associated
 # joint distributions for the probabilities and with
-# the help of the function \code{rm8nd4adja} 
+# the help of the function \code{rm8nd4adja}
 # for the relationships.
 #KEYWORDS
 #INPUTS
@@ -453,7 +453,7 @@ rm8nd4nbn <- function(nbn,nodes)
 #VALUE
 # The resulting \code{nbn}.
 #EXAMPLE
-# rm8nd4nbn(rbmn0nbn.04,"1.1"); 
+# rm8nd4nbn(rbmn0nbn.04,"1.1");
 #REFERENCE
 #SEE ALSO
 #CALLING
@@ -465,57 +465,57 @@ rm8nd4nbn <- function(nbn,nodes)
 #--------------------------------------------
 {
   # checking
-  return("the presently proposed algorithm is false, see 'margina.r' to check it");
+  return("the presently proposed algorithm is false, see 'margina.r' to check it")
   # getting the ordering subset as a numeric
   if (is.numeric(nodes)) {
-    ss <- sort(nodes);
+    ss <- sort(nodes)
     if ((max(ss) > length(nbn)) | (min(ss) < 1)) {
-      r.erreur(list(length(nbn),nodes),"Not a subset (1)");
+      r.erreur(list(length(nbn),nodes),"Not a subset (1)")
     }
   } else {
-    ss <- sort(match(nodes,names(nbn)));
+    ss <- sort(match(nodes,names(nbn)))
     if (length(ss)!=length(nodes)) {
-      r.erreur(list(names(nbn),nodes),"Not a subset (2)");
+      r.erreur(list(names(nbn),nodes),"Not a subset (2)")
     }
   }
-  nbno <- length(nbn);
+  nbno <- length(nbn)
   # getting the structure
-  pam <- adja4nbn(nbn);
-  pam <- rm8nd4adja(pam,ss);
+  pam <- adja4nbn(nbn)
+  pam <- rm8nd4adja(pam,ss)
   # getting the parameters
-  rr <- sort(setdiff(r.bc(nbno),ss));
-  para <- gema2mn(nbn2gema(nbn));
+  rr <- sort(setdiff(r.bc(nbno),ss))
+  para <- gema2mn(nbn2gema(nbn))
   para <- list(mu=para$mu[rr],
                gamma=para$gamma[rr,rr,drop=FALSE]
-              );
+              )
   # reconsistuting the nbn from pam and para
-  res <- vector("list",length(rr));
-  names(res) <- names(nbn)[rr];
+  res <- vector("list",length(rr))
+  names(res) <- names(nbn)[rr]
   for (nn in r.bf(rr)) {
     # the parents
-    rrpa <- which(pam[,nn]==1);
-    res[[nn]]$parents <- names(res)[rrpa];
+    rrpa <- which(pam[,nn]==1)
+    res[[nn]]$parents <- names(res)[rrpa]
     # the parameters values
     if (length(rrpa)==0) {
       # no parents
-      mumu <- para$mu[nn];
-      gaga <- para$gamma[nn,nn];
-      coco <- numeric(0);
+      mumu <- para$mu[nn]
+      gaga <- para$gamma[nn,nn]
+      coco <- numeric(0)
     } else {
       # parents
-      gvv <- solve(para$gamma[rrpa,rrpa,drop=FALSE]);
-      guv <- para$gamma[nn,rrpa,drop=FALSE];
-      mup <- matrix(para$mu[rrpa],length(rrpa));
-      mumu <- para$mu[nn] - guv %*% gvv %*% mup;
-      gaga <- guv %*% gvv %*% t(guv);
-      coco <- guv %*% gvv;
+      gvv <- solve(para$gamma[rrpa,rrpa,drop=FALSE])
+      guv <- para$gamma[nn,rrpa,drop=FALSE]
+      mup <- matrix(para$mu[rrpa],length(rrpa))
+      mumu <- para$mu[nn] - guv %*% gvv %*% mup
+      gaga <- guv %*% gvv %*% t(guv)
+      coco <- guv %*% gvv
     }
-    res[[nn]]$mu <- as.vector(mumu);
-    res[[nn]]$sigma <- as.vector(sqrt(gaga));
-    res[[nn]]$regcoef <- as.vector(coco);
+    res[[nn]]$mu <- as.vector(mumu)
+    res[[nn]]$sigma <- as.vector(sqrt(gaga))
+    res[[nn]]$regcoef <- as.vector(coco)
   }
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -524,7 +524,7 @@ generate8nbn <- function(rnn=c(3,7),ppar=0.5,rreg=c(-1,1),
                          rmu=c(0,0),rsig=c(0,1),
                          nona=r.form3names(max(rnn)))
 #TITLE returns a randomly built /nbn/ object.
-#DESCRIPTION 
+#DESCRIPTION
 # To obtain systematic results, you have to call \code{set.seed}
 # before hands.
 #DETAILS
@@ -534,7 +534,7 @@ generate8nbn <- function(rnn=c(3,7),ppar=0.5,rreg=c(-1,1),
 # Conditional expectations and standard deviations are uniformly drawn.\cr
 # All range arguments can be given one value instead of two, to precise the
 # unique value to use.
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #[INPUTS]
 #{rnn} <<Range of the number of nodes.>>
@@ -570,45 +570,45 @@ generate8nbn <- function(rnn=c(3,7),ppar=0.5,rreg=c(-1,1),
   if (length(rmu)==1) { rmu <- c(rmu,rmu);}
   if (length(rsig)==1) { rsig <- c(rsig,rsig);}
   # getting the node number.
-  nn <- floor(runif(1,rnn[1],rnn[2]+1));
+  nn <- floor(runif(1,rnn[1],rnn[2]+1))
   # getting the node names
-  nona <- nona[r.bc(nn)];
+  nona <- nona[r.bc(nn)]
   # getting the probabilities of parents
-  pp <- ppar;
+  pp <- ppar
   while (length(pp) < nn) { pp <- c(pp,ppar);}
-  pp <- pp[1:nn];
+  pp <- pp[1:nn]
   # building the /nbn/
-  res <- vector("list",0);
+  res <- vector("list",0)
   for (ii in r.bc(nn)) {
-    mu <- runif(1,rmu[1],rmu[2]);
-    sigma <- runif(1,rsig[1],rsig[2]);
-    regcoef <- numeric(0);
-    parents <- character(0);
+    mu <- runif(1,rmu[1],rmu[2])
+    sigma <- runif(1,rsig[1],rsig[2])
+    regcoef <- numeric(0)
+    parents <- character(0)
     for (jj in r.bc(ii-1)) {
       if (rbinom(1,1,pp[ii]) > 0) {
-        parents <- c(parents,nona[jj]);
-        regcoef <- c(regcoef,runif(1,rreg[1],rreg[2]));
+        parents <- c(parents,nona[jj])
+        regcoef <- c(regcoef,runif(1,rreg[1],rreg[2]))
       }
     }
     res[[ii]] <- list(mu=mu,sigma=sigma,
                       parents=parents,
-                      regcoef=regcoef);
+                      regcoef=regcoef)
   }
-  names(res) <- nona;
+  names(res) <- nona
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-arc7nb4nbn <- function(nbn,each=FALSE) 
+arc7nb4nbn <- function(nbn,each=FALSE)
 #TITLE returns the number(s) of arcs of a /nbn/
 #DESCRIPTION returns the arc numbers of the node
 # of /nbn/ object.
 #DETAILS
 # Parents associated with a zero regression coefficient
 # are not excluded in the counting.
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{nbn}<< The \code{nbn} object to consider.>>
 #[INPUTS]
@@ -632,18 +632,18 @@ arc7nb4nbn <- function(nbn,each=FALSE)
   # checking
   # To be done
   # getting the arc number for each node
-  nbno <- length(nbn);
-  res <- rep(0,nbno);
+  nbno <- length(nbn)
+  res <- rep(0,nbno)
   for (nn in r.bf(nbn)) {
-    res[nn] <- length(nbn[[nn]]$parents);
+    res[nn] <- length(nbn[[nn]]$parents)
   }
   # finalizing
   if (each) {
-    names(res) <- names(nbn);
+    names(res) <- names(nbn)
   } else {
-    res <- sum(res);
+    res <- sum(res)
   }
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

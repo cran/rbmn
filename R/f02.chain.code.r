@@ -10,7 +10,7 @@ generate8chain <- function(rnn=c(3,7),proo=0.5,rcor=c(-1,1),
 # in the value.\cr
 # Roots are placed according to \code{proo} probabilities, then collider
 # are placed in between with uniform probability on the possibles nodes.
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #[INPUTS]
 #{rnn} <<Range of the number of nodes.>>
@@ -46,41 +46,41 @@ generate8chain <- function(rnn=c(3,7),proo=0.5,rcor=c(-1,1),
   if (length(rmu)==1) { rmu <- c(rmu,rmu);}
   if (length(rsig)==1) { rsig <- c(rsig,rsig);}
   # getting the node number.
-  nn <- floor(runif(1,rnn[1],rnn[2]+1));
+  nn <- floor(runif(1,rnn[1],rnn[2]+1))
   # getting the node names
-  nona <- nona[r.bc(nn)];
+  nona <- nona[r.bc(nn)]
   # getting the probabilities of downstream
-  pp <- proo;
+  pp <- proo
   while (length(pp) < nn) { pp <- c(pp,proo);}
-  pp <- pp[1:nn];
+  pp <- pp[1:nn]
   # building the /chain/
   # miscellaneous part
-  res <- vector("list",0);
-  res$names <- nona;
-  res$mu <- runif(nn,rmu[1],rmu[2]);
-  res$sigma <- runif(nn,rsig[1],rsig[2]);
-  res$corre <- runif(nn-1,rcor[1],rcor[2]);
+  res <- vector("list",0)
+  res$names <- nona
+  res$mu <- runif(nn,rmu[1],rmu[2])
+  res$sigma <- runif(nn,rsig[1],rsig[2])
+  res$corre <- runif(nn-1,rcor[1],rcor[2])
   # placing roots first
-  root <- rbinom(nn,1,pp);
+  root <- rbinom(nn,1,pp)
   for (ii in r.bc(nn-1)) {
     if (root[ii]==1) { root[ii+1] <- 0;}
   }
   # at least one root
   if (sum(root)==0) {
-    root[sample.int(nn,1)] <- 1;
+    root[sample.int(nn,1)] <- 1
   }
-  res$roots <- nona[root==1];
-  root <- which(root==1);
+  res$roots <- nona[root==1]
+  root <- which(root==1)
   # placing colliders second
-  res$colliders <- character(0);
+  res$colliders <- character(0)
   for (ii in r.bc(length(root)-1)) {
-    r1 <- root[ii]; r2 <- root[ii+1];
+    r1 <- root[ii]; r2 <- root[ii+1]
     if (r2-r1<2) { stop("Erreur in generate8chain");}
-    qui <- sample.int(r2-r1-1,1)+r1;
-    res$colliders <- c(res$colliders,nona[qui]);
+    qui <- sample.int(r2-r1-1,1)+r1
+    res$colliders <- c(res$colliders,nona[qui])
   }
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -91,9 +91,9 @@ print8chain <- function(chain,digits=3)
 #DETAILS
 # See \code{nbn2chain} code for some details about the
 # definition of a /chain/.
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
-#{chain} << The \code{chain} object to print.>>  
+#{chain} << The \code{chain} object to print.>>
 #[INPUTS]
 #{digits} << when not null, the number of digits for rounding the
 # numerical values.>>
@@ -114,37 +114,37 @@ print8chain <- function(chain,digits=3)
 #--------------------------------------------
 {
   # checking
-  che <- check8chain(chain);
+  che <- check8chain(chain)
   if (is.character(che)) {
-    print(che);
-    stop("The provided 'chain' is not valid!");
+    print(che)
+    stop("The provided 'chain' is not valid!")
   }
   # node number
-  nn <- length(chain$names);
-  orien <- aux2(chain)/2+1.5;
-  cat("#-------------------------\n");
+  nn <- length(chain$names)
+  orien <- aux2(chain)/2+1.5
+  cat("#-------------------------\n")
   for (node in r.bc(nn)) {
-    nna <- chain$names[node];
-    nona <- paste("(",nna,")",sep="");
+    nna <- chain$names[node]
+    nona <- paste("(",nna,")",sep="")
     if (nna %in% chain$roots) {
-      nona <- paste("<--(",nna,")-->",sep="");
+      nona <- paste("<--(",nna,")-->",sep="")
     }
     if (nna %in% chain$colliders) {
-      nona <- paste("-->)",nna,"(<--",sep="");
+      nona <- paste("-->)",nna,"(<--",sep="")
     }
-    cat(r.form3justifie(nona,nbc=10,format=2));
+    cat(r.form3justifie(nona,nbc=10,format=2))
     cat("  ",round(chain$mu[node],digits),"              (",
-             round(chain$sigma[node],digits),")",sep="");
-    cat("\n");
+             round(chain$sigma[node],digits),")",sep="")
+    cat("\n")
     if (node < nn) {
-      cat(r.form3justifie(c("^","v")[orien[node]],nbc=10,format=2));
-      cat("     <",round(chain$corre[node],digits),">",sep="");
-      cat("\n");
+      cat(r.form3justifie(c("^","v")[orien[node]],nbc=10,format=2))
+      cat("     <",round(chain$corre[node],digits),">",sep="")
+      cat("\n")
     }
   }
-  cat("#-------------------------\n");
+  cat("#-------------------------\n")
   # returning
-  invisible();
+  invisible()
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -156,9 +156,9 @@ check8chain <- function(chain)
 #DETAILS
 # Looking a the code of this function provides a way to know which
 # are the requirements of a /chain/ object.
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
-#{chain} << The \code{chain} object to check.>>  
+#{chain} << The \code{chain} object to check.>>
 #[INPUTS]
 #VALUE
 # \code{TRUE} or a \code{character} containing some clue
@@ -178,13 +178,13 @@ check8chain <- function(chain)
 #--------------------------------------------
 {
   # checking the component names
-  compo <- names(rbmn0chain.01);
+  compo <- names(rbmn0chain.01)
   if (!setequal(compo,names(chain))) {
-    return("The names of the chain are not 'names(rbmn0chain.01)'");
+    return("The names of the chain are not 'names(rbmn0chain.01)'")
   }
   # checking the lengths
-  nbno <- length(chain$names);
-  res <- character(0);
+  nbno <- length(chain$names)
+  res <- character(0)
   if (nbno != length(chain$mu)) { res <- c(res,"'$mu' has got a bad length");}
   if (nbno != length(chain$mu)) { res <- c(res,"'$sigma' has got a bad length");}
   if ((nbno-1) != length(chain$corre)) { res <- c(res,"'$corre' has got a bad length");}
@@ -194,7 +194,7 @@ check8chain <- function(chain)
   # checking the correlations
   if (any(abs(chain$corre)>1)) { return("Some correlation doesn't make sense");}
   # returning
-  TRUE;
+  TRUE
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -211,7 +211,7 @@ order4chain <- function(chain,ord=NULL)
 #DETAILS
 # For the moment the \code{ord} option is
 # bad and an error message is returned when used.
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{chain}<< the \code{chain} object to be considered.>>
 #[INPUTS]
@@ -222,7 +222,7 @@ order4chain <- function(chain,ord=NULL)
 # a permutation vector of the nodes of the /nbn/
 #        or a named character with the nodes not having
 #        their parents before them; when it is of
-#        length zero this means that the check 
+#        length zero this means that the check
 #        was successful.
 #EXAMPLE
 # order4chain(rbmn0chain.02);
@@ -240,13 +240,13 @@ order4chain <- function(chain,ord=NULL)
   # checking
   # < to be done >
   # getting the permutation
-  ooo <- aux2(chain,TRUE);
+  ooo <- aux2(chain,TRUE)
   if (is.null(ord)) {
-    res <- ooo;
+    res <- ooo
   } else {
-    return("Sorry, the 'ord' option is wrong and must be corrected!");
-    nam <- chain$names;
-    nn <- length(nam);
+    return("Sorry, the 'ord' option is wrong and must be corrected!")
+    nam <- chain$names
+    nn <- length(nam)
     if (is.numeric(ord)) {
       # a numeric permutation is expected
       if (length(union(ord,r.bc(nn)))!=nn) {
@@ -256,14 +256,14 @@ order4chain <- function(chain,ord=NULL)
       # a list of names is expected
       if (length(union(ord,nam))!=nn) {
         r.erreur(list(ord,nam),
-               message="'ord' is not a permutation of 'nam'");
+               message="'ord' is not a permutation of 'nam'")
       }
-    ord <- r.numero(ord,nam);
+    ord <- r.numero(ord,nam)
     }
     # checking and storing inconsistencies
-    res <- numeric(0); nm <- character(0);
-    names(res) <- nm;
-    etat <- state4chain(chain);
+    res <- numeric(0); nm <- character(0)
+    names(res) <- nm
+    etat <- state4chain(chain)
     for (uu in ord) {
       if (etat[uu] == "r") {
         if (uu > 1) {
@@ -275,15 +275,15 @@ order4chain <- function(chain,ord=NULL)
 	    if (etat[uu+1] == "c") { etat[uu+1] <- "t";}
         }
       } else {
-	  res <- c(res,uu);
-          nm <- c(nm,nam[uu]);
-          names(res) <- nm;
+	  res <- c(res,uu)
+          nm <- c(nm,nam[uu])
+          names(res) <- nm
       }
-      etat[uu] <- "f";
+      etat[uu] <- "f"
     }
   }
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -295,7 +295,7 @@ state4chain <- function(chain)
 # "r" for root, "c" for collider, "t" for transmitter and
 # "l" for leaf.
 #DETAILS
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{chain}<< the \code{chain} object to be considered.>>
 #[INPUTS]
@@ -317,17 +317,17 @@ state4chain <- function(chain)
   # checking
   # < to be done >
   # identifying
-  nn <- length(chain$names);
-  etat <- rep("t",nn);
-  etat[c(1,nn)] <- "l";
+  nn <- length(chain$names)
+  etat <- rep("t",nn)
+  etat[c(1,nn)] <- "l"
   if (length(chain$colliders) > 0) {
-      etat[r.numero(chain$colliders,chain$names)] <- "c";
+      etat[r.numero(chain$colliders,chain$names)] <- "c"
   }
-  etat[r.numero(chain$roots,chain$names)] <- "r";
+  etat[r.numero(chain$roots,chain$names)] <- "r"
   # naming
-  names(etat) <- chain$names;
+  names(etat) <- chain$names
   # returning
-  etat;
+  etat
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -338,14 +338,14 @@ marginal4chain <- function(chain)
 # returns a list with two components: \code{$mu} and \code{$sigma}
 # vectors of marginal expectations and standard deviations.\cr
 #DETAILS
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{chain}<< the \code{chain} object to be considered.>>
 #[INPUTS]
 #VALUE
 # a list with the two components \code{$mu} and \code{$sigma}.
 #EXAMPLE
-# marginal4chain(rbmn0chain.02);
+# marginal4chain(rbmn0chain.02)
 #REFERENCE
 #SEE ALSO
 #CALLING
@@ -360,49 +360,49 @@ marginal4chain <- function(chain)
   # < to be done >
   # getting a topological order
   # and the status of each node
-    nn <- length(chain$names);
-    ooo <- order4chain(chain);
-    etat <- state4chain(chain);
+    nn <- length(chain$names)
+    ooo <- order4chain(chain)
+    etat <- state4chain(chain)
   # following this order computing
-  # progressively expectations and 
+  # progressively expectations and
   # standard deviations
-    mu <- sigma <- rep(NA,nn);
-    orien <- aux2(chain);
+    mu <- sigma <- rep(NA,nn)
+    orien <- aux2(chain)
     for (uu in ooo) {
 	if (etat[uu]=="r") {
             # root, no modification
-	    mu[uu] <- chain$mu[uu];
-	    sigma[uu] <- chain$sigma[uu];
+	    mu[uu] <- chain$mu[uu]
+	    sigma[uu] <- chain$sigma[uu]
 	} else {
           if (etat[uu]=="c") {
               # collider: the two neighbours are parents
-              sigma[uu] <- chain$sigma[uu]/aux0(chain$corre[(uu-1):uu]);              
-              mu[uu] <- chain$mu[uu] + 
+              sigma[uu] <- chain$sigma[uu]/aux0(chain$corre[(uu-1):uu]);
+              mu[uu] <- chain$mu[uu] +
                         chain$corre[uu-1]*sigma[uu]/sigma[uu-1]*mu[uu-1] +
-                        chain$corre[uu]  *sigma[uu]/sigma[uu+1]*mu[uu+1];
+                        chain$corre[uu]  *sigma[uu]/sigma[uu+1]*mu[uu+1]
 	  } else {
               # other cases: only one parent
               if (uu>1) { if (orien[uu-1]==1) {
                   # parent upward
-                  sigma[uu] <- chain$sigma[uu]/aux0(chain$corre[uu-1]);              
-                  mu[uu] <- chain$mu[uu] + 
-                            chain$corre[uu-1]*sigma[uu]/sigma[uu-1]*mu[uu-1];
+                  sigma[uu] <- chain$sigma[uu]/aux0(chain$corre[uu-1]);
+                  mu[uu] <- chain$mu[uu] +
+                            chain$corre[uu-1]*sigma[uu]/sigma[uu-1]*mu[uu-1]
 
 	      }}
               if (uu<nn) { if (orien[uu]==-1) {
                   # parent downward
-                  sigma[uu] <- chain$sigma[uu]/aux0(chain$corre[uu]);              
-                  mu[uu] <- chain$mu[uu] + 
-                            chain$corre[uu]*sigma[uu]/sigma[uu+1]*mu[uu+1];
+                  sigma[uu] <- chain$sigma[uu]/aux0(chain$corre[uu]);
+                  mu[uu] <- chain$mu[uu] +
+                            chain$corre[uu]*sigma[uu]/sigma[uu+1]*mu[uu+1]
 	      }}
 	  }
 	}
     }
   if (any(is.na(mu))) {
-      r.erreur(chain,message="either the chain or the algo");
+      r.erreur(chain,message="either the chain or the algo")
   }
   # returning
-  list(mu=mu,sigma=sigma);
+  list(mu=mu,sigma=sigma)
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -412,14 +412,14 @@ chain2nbn <- function(chain)
 #DESCRIPTION From a \code{chain} object
 # returns the \code{nbn} translation.
 #DETAILS
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{chain}<< the \code{chain} object to be transformed.>>
 #[INPUTS]
 #VALUE
 # The corresponding \code{nbn} object.
 #EXAMPLE
-# print8nbn(chain2nbn(rbmn0chain.02),ordering=names(rbmn0nbn.02));
+# print8nbn(chain2nbn(rbmn0chain.02),ordering=names(rbmn0nbn.02))
 #REFERENCE
 #SEE ALSO
 #CALLING
@@ -433,59 +433,59 @@ chain2nbn <- function(chain)
   # checking
   # < to be done >
   # constants
-  nna <- chain$names;
-  nn <- length(nna);
+  nna <- chain$names
+  nn <- length(nna)
   ooo <- aux2(chain,TRUE); # topological order
   rho <- aux2(chain); # arc orientations
   avan <- c(0,rho)== 1; # parent before
   apre <- c(rho,0)==-1; # parent after
-  aaa <- sort(r.numero(chain$roots,chain$names));
+  aaa <- sort(r.numero(chain$roots,chain$names))
   # transforming
-  res <- vector("list",nn);
-  sigma <- marginal4chain(chain)$sigma;
-  mu <- chain$mu;
+  res <- vector("list",nn)
+  sigma <- marginal4chain(chain)$sigma
+  mu <- chain$mu
   for (nnu in ooo) {
     papa <- character(0); # parent specification
     coef <- numeric(0);   # regression coefficients
     # only non roots must be filled
     if (!(nnu %in% aaa)) {
-      corri <- 1;
+      corri <- 1
       if (avan[nnu] & apre[nnu]) {
-        corri <- aux0(chain$corre[(nnu-1):nnu]);
+        corri <- aux0(chain$corre[(nnu-1):nnu])
       } else {
         if (avan[nnu]) { corri <- aux0(chain$corre[nnu-1]);}
         if (apre[nnu]) { corri <- aux0(chain$corre[nnu  ]);}
       }
       if (avan[nnu]) {
         # the node before is a parent
-        papa <- nna[nnu-1];
+        papa <- nna[nnu-1]
         coef <- chain$sigma[nnu] / sigma[nnu-1] /
-                corri * chain$corre[nnu-1];
+                corri * chain$corre[nnu-1]
       }
       if (apre[nnu]) {
         # the node after is a parent
-        papa <- c(papa,nna[nnu+1]);
+        papa <- c(papa,nna[nnu+1])
         coef <- c(coef,chain$sigma[nnu] / sigma[nnu+1] /
-                       corri * chain$corre[nnu]);
+                       corri * chain$corre[nnu])
       }
     }
-    res[[nnu]]$parents <- papa;
-    res[[nnu]]$regcoef <- coef;
-    res[[nnu]]$mu <- chain$mu[nnu];             
-    res[[nnu]]$sigma <- chain$sigma[nnu];
+    res[[nnu]]$parents <- papa
+    res[[nnu]]$regcoef <- coef
+    res[[nnu]]$mu <- chain$mu[nnu]
+    res[[nnu]]$sigma <- chain$sigma[nnu]
   }
-  names(res) <- nna;
+  names(res) <- nna
   # reordering the nodes
-  ooo <- order4chain(chain);
-  res <- res[ooo];
+  ooo <- order4chain(chain)
+  res <- res[ooo]
   # testing possible NaNs
   for (ii in r.bf(res)) {
     if (any(is.na(res[[ii]]$regcoef))) {
-      stop("Dectected Numerical Inaccuracy in 'chain2nbn'");
+      stop("Dectected Numerical Inaccuracy in 'chain2nbn'")
     }
   }
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -496,7 +496,7 @@ chain2gema <- function(chain)
 # returns the \code{gema} using a direct formulae.\cr
 # Much precised than to use the /nbn/ way.
 #DETAILS
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{chain}<< the \code{chain} object to be transformed.>>
 #[INPUTS]
@@ -518,68 +518,68 @@ chain2gema <- function(chain)
   # checking
   # < to be done >
   # useful constants
-  nna <- chain$names;
-  nn <- length(nna);
-  pare <- aux2(chain,parents=TRUE);
+  nna <- chain$names
+  nn <- length(nna)
+  pare <- aux2(chain,parents=TRUE)
   # initializing
   res <- list(mu=marginal4chain(chain)$mu,
-              li=diag(nrow=nn));
-  names(res$mu) <- nna;
-  dimnames(res$li) <- list(nna,NULL);
+              li=diag(nrow=nn))
+  names(res$mu) <- nna
+  dimnames(res$li) <- list(nna,NULL)
   # computing linear combination
   ## for correlations colliding structure
   for (no in r.bc(nn)) {
     if (pare[no] == -1) {
       # a colliding node
-      res$li[no,no-1] <- chain$corre[no];
-      res$li[no,no] <- aux0(chain$corre[c(no,no+1)]);
-      res$li[no,no+1] <- chain$corre[no+1];
+      res$li[no,no-1] <- chain$corre[no]
+      res$li[no,no] <- aux0(chain$corre[c(no,no+1)])
+      res$li[no,no+1] <- chain$corre[no+1]
     } else {
       if (pare[no] > 0) {
         # a standard node
-        if (pare[no] < no) { rho <- chain$corre[no-1];
+        if (pare[no] < no) { rho <- chain$corre[no-1]
                     } else { rho <- chain$corre[no];}
-        res$li[no,pare[no]] <- rho;
-        res$li[no,no] <- aux0(rho);
+        res$li[no,pare[no]] <- rho
+        res$li[no,no] <- aux0(rho)
       }
     }
   }
   ## for correlations sequential segments
   if (length(chain$colliders)>0) {
-    ccc <- r.numero(chain$colliders,nna);
+    ccc <- r.numero(chain$colliders,nna)
   } else {
-    ccc <- numeric(0);
+    ccc <- numeric(0)
   }
-  aaa <- r.numero(chain$roots,nna);
-  ava <- aaa[-length(aaa)];
-  apr <- aaa[-1];
+  aaa <- r.numero(chain$roots,nna)
+  ava <- aaa[-length(aaa)]
+  apr <- aaa[-1]
   for (cc in r.bf(ccc)) {
-    pivo <- res$li[ccc[cc],ccc[cc]];
-    ba <- ava[cc]:ccc[cc];
-    bp <- ccc[cc]:apr[cc];
-    res$li[ba,ba] <- aux1(chain$corre[ba[-length(ba)]],FALSE);
-    res$li[bp,bp] <- aux1(chain$corre[bp[-length(bp)]],TRUE);
-    res$li[ccc[cc],ccc[cc]] <- pivo;
+    pivo <- res$li[ccc[cc],ccc[cc]]
+    ba <- ava[cc]:ccc[cc]
+    bp <- ccc[cc]:apr[cc]
+    res$li[ba,ba] <- aux1(chain$corre[ba[-length(ba)]],FALSE)
+    res$li[bp,bp] <- aux1(chain$corre[bp[-length(bp)]],TRUE)
+    res$li[ccc[cc],ccc[cc]] <- pivo
   }
   ## without forgetting endind sequential segments
   if (aaa[1] > 1) {
-    aa <- 1:aaa[1];
-    res$li[aa,aa] <- aux1(chain$corre[1:(aaa[1]-1)],TRUE);
+    aa <- 1:aaa[1]
+    res$li[aa,aa] <- aux1(chain$corre[1:(aaa[1]-1)],TRUE)
   }
   if (aaa[length(aaa)] < nn) {
-    aa <- aaa[length(aaa)]:nn;
-    res$li[aa,aa] <- aux1(chain$corre[aaa[length(aaa)]:(nn-1)],FALSE);
+    aa <- aaa[length(aaa)]:nn
+    res$li[aa,aa] <- aux1(chain$corre[aaa[length(aaa)]:(nn-1)],FALSE)
   }
   #
   ## adding standard deviations
-  masig <- marginal4chain(chain)$sigma;
-  res$li <- res$li * masig;
+  masig <- marginal4chain(chain)$sigma
+  res$li <- res$li * masig
   # reordering the nodes
-  ooo <- order4chain(chain);
-  res$mu <- res$mu[ooo];
-  res$li <- res$li[ooo,ooo];
+  ooo <- order4chain(chain)
+  res$mu <- res$mu[ooo]
+  res$li <- res$li[ooo,ooo]
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -589,7 +589,7 @@ chain2correlation <- function(chain)
 #DESCRIPTION returns the correlation
 # matrix of a /chain/ object.
 #DETAILS
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{chain}<< The chain object to consider.>>
 #[INPUTS]
@@ -611,19 +611,19 @@ chain2correlation <- function(chain)
 {
   # checking
   # <to be done>
-  nn <- length(chain$mu);
-  res <- matrix(0,nn,nn);
-  dimnames(res) <- list(chain$names,chain$names);
+  nn <- length(chain$mu)
+  res <- matrix(0,nn,nn)
+  dimnames(res) <- list(chain$names,chain$names)
   # finding the milestones
-  etat <- state4chain(chain);
-  sto <- sort(c(1,nn,which("c"==etat)));
+  etat <- state4chain(chain)
+  sto <- sort(c(1,nn,which("c"==etat)))
   # introducing the blocks
   for (bb in r.bc(length(sto)-1)) {
-    deb <- sto[bb]; fin <- sto[bb+1];
-    res[r.bd(deb,fin),r.bd(deb,fin)] <- aux5(chain$corre[r.bd(deb,fin-1)]);
+    deb <- sto[bb]; fin <- sto[bb+1]
+    res[r.bd(deb,fin),r.bd(deb,fin)] <- aux5(chain$corre[r.bd(deb,fin-1)])
   }
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -635,7 +635,7 @@ chain2mn <- function(chain,order=TRUE)
 # to use this function that the general function
 # \code{nbn2mn} since exact formulae are applied.
 #DETAILS
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{chain}<< The chain object to consider.>>
 #[INPUTS]
@@ -660,23 +660,23 @@ chain2mn <- function(chain,order=TRUE)
   # checking
   # <to be done>
   # getting the marginal parameters
-  margi <- marginal4chain(chain);
+  margi <- marginal4chain(chain)
   # getting the multivariable parameters
-  corre <- chain2correlation(chain);
+  corre <- chain2correlation(chain)
   # computing the variance matrix
-  gamma <- outer(margi$sigma,margi$sigma,"*") * corre;
+  gamma <- outer(margi$sigma,margi$sigma,"*") * corre
   # naming the components
-  names(margi$mu) <- chain$names;
-  dimnames(gamma) <- list(chain$names,chain$names);
+  names(margi$mu) <- chain$names
+  dimnames(gamma) <- list(chain$names,chain$names)
   # getting a topological order
   if (order) {
-    ooo <- order4chain(chain);
+    ooo <- order4chain(chain)
   } else {
-    ooo <- r.bf(margi$mu);
+    ooo <- r.bf(margi$mu)
   }
   # returning
   list(mu=margi$mu[ooo],
-       gamma=gamma[ooo,ooo]);
+       gamma=gamma[ooo,ooo])
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -686,11 +686,11 @@ chain2pre <- function(chain,corre=FALSE)
 #DESCRIPTION returns the precision matrix
 # of a chain, that is the inverse of its
 # variance (correlation) matrix. Much better
-# to use this function that 
+# to use this function that
 # \code{solve(chain2mn(chain)$gamma)} since
 # exact formulae are applied.
 #DETAILS
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{chain}<< The chain object to consider.>>
 #[INPUTS]
@@ -714,37 +714,37 @@ chain2pre <- function(chain,corre=FALSE)
   # <to be done>
   # building the inverse of the correlation matrix
   # constants
-  nn <- length(chain$names);
+  nn <- length(chain$names)
   ## first a long sequential chain
-  res <- aux6(chain$corre);
+  res <- aux6(chain$corre)
   ## then the 3x3 blocks for colliders
-  coli <- sort(which("c"==state4chain(chain)));
+  coli <- sort(which("c"==state4chain(chain)))
   for (cc in coli) {
-    ends <- c(cc==2,cc==nn-1);
-    ou <- (cc-1):(cc+1);
-    res[ou,ou] <- aux7(chain$corre[ou[-3]],ends);
+    ends <- c(cc==2,cc==nn-1)
+    ou <- (cc-1):(cc+1)
+    res[ou,ou] <- aux7(chain$corre[ou[-3]],ends)
   }
   # adding the variance components
   if (!corre) {
-    sisi <- marginal4chain(chain)$sigma;
-    res <- res / outer(sisi,sisi,"*");
+    sisi <- marginal4chain(chain)$sigma
+    res <- res / outer(sisi,sisi,"*")
   }
   # dimnaming
-  dimnames(res) <- list(chain$names,chain$names);
+  dimnames(res) <- list(chain$names,chain$names)
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 inout4chain <- function(chain)
 #TITLE reduces a chain to its inputs and outputs
-#DESCRIPTION From a \code{chain} returns the 
-# reduced \code{chain} comprising only inputs 
+#DESCRIPTION From a \code{chain} returns the
+# reduced \code{chain} comprising only inputs
 # (that is root nodes) and outputs (that is
 # colliders and ends which are not roots)
 #DETAILS
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{chain}<< The chain object to consider.>>
 #[INPUTS]
@@ -765,30 +765,30 @@ inout4chain <- function(chain)
   # checking
   # <to be done>
   # determining the node to keep
-  eta <- state4chain(chain);
-  kee <- chain$names[which(eta!="t")];
-  nk <- length(kee);
+  eta <- state4chain(chain)
+  kee <- chain$names[which(eta!="t")]
+  nk <- length(kee)
   # building the resulting chain
-  res <- vector("list",0);
-  res$names <- kee;
-  res$roots <- chain$roots;
-  res$colliders <- chain$colliders;
+  res <- vector("list",0)
+  res$names <- kee
+  res$roots <- chain$roots
+  res$colliders <- chain$colliders
   if (nk < 2) {
-    res$mu <- chain$mu;
-    res$sigma <- chain$sigma;
-    res$corre <- chain$corre;
+    res$mu <- chain$mu
+    res$sigma <- chain$sigma
+    res$corre <- chain$corre
   } else {
-    mn <- chain2mn(chain);
-    mn$mu <- mn$mu[kee];
-    mn$gamma <- mn$gamma[kee,kee,drop=FALSE];
-    res$mu <- mn$mu;
-    res$sigma <- sqrt(diag(mn$gamma));
-    co <- cor4var(mn$gamma);
-    res$corre <- diag(co[-1,-nk,drop=FALSE]);
-    res <- aux4(res);
+    mn <- chain2mn(chain)
+    mn$mu <- mn$mu[kee]
+    mn$gamma <- mn$gamma[kee,kee,drop=FALSE]
+    res$mu <- mn$mu
+    res$sigma <- sqrt(diag(mn$gamma))
+    co <- cor4var(mn$gamma)
+    res$corre <- diag(co[-1,-nk,drop=FALSE])
+    res <- aux4(res)
   }
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -798,7 +798,7 @@ reverse8chain <- function(chain)
 #DESCRIPTION returns the chain obtained
 # after reversing its node order
 #DETAILS
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{chain}<< The chain object to consider.>>
 #[INPUTS]
@@ -820,15 +820,15 @@ reverse8chain <- function(chain)
   # checking
   # <to be done>
   # building it
-  res <- vector("list",0);
-  res$names <- rev(chain$names);
-  res$roots <- chain$roots;
-  res$colliders <- chain$colliders;
-  res$mu <- rev(chain$mu);
-  res$sigma <- rev(chain$sigma);
-  res$corre <- rev(chain$corre);
+  res <- vector("list",0)
+  res$names <- rev(chain$names)
+  res$roots <- chain$roots
+  res$colliders <- chain$colliders
+  res$mu <- rev(chain$mu)
+  res$sigma <- rev(chain$sigma)
+  res$corre <- rev(chain$corre)
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -839,7 +839,7 @@ is8nbn8chain <- function(nbn,order=FALSE)
 # \code{FALSE} [NULL] according that \code{nbn}
 # is a chain of not [according to \code{order}].
 #DETAILS
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{nbn}<< The nbn object to consider.>>
 #[INPUTS]
@@ -867,60 +867,60 @@ is8nbn8chain <- function(nbn,order=FALSE)
   # checking
   # <to be done>
   # constants
-  nn <- length(names(nbn));
+  nn <- length(names(nbn))
   # degenerate case
   if (nn == 1) {
     if (order) {
-      return(1);
+      return(1)
     } else {
-      return(TRUE);
+      return(TRUE)
     }
   }
   # symmetrical relationship matrix
-  rela <- adja4nbn(nbn);
-  rela <- rela + t(rela);
+  rela <- adja4nbn(nbn)
+  rela <- rela + t(rela)
   # checking obvious cases
-  res <- TRUE;
-  nbr <- apply(rela,1,sum);
+  res <- TRUE
+  nbr <- apply(rela,1,sum)
   if (sum(nbr == 1)!= 2) { res <- FALSE;}
   if (sum(nbr == 2)!= nn-2) { res <- FALSE;}
   if (!res) {
     if (order) {
-      return(NULL);
+      return(NULL)
     } else {
-      return(FALSE);
+      return(FALSE)
     }
   }
   # looking for a chain between nodes
-  anc <- which(nbr==1)[1];
-  orde <- anc;
-  mauvais <- FALSE;
+  anc <- which(nbr==1)[1]
+  orde <- anc
+  mauvais <- FALSE
   while ((length(orde)<nn) & !mauvais) {
-    nou <- which(rela[anc,]==1);
+    nou <- which(rela[anc,]==1)
     if (length(nou) != 1) {
-      mauvais <- TRUE;
+      mauvais <- TRUE
     } else {
-      rela[anc,nou] <- rela[nou,anc] <- 0;
-      orde <- c(orde,nou);
-      anc <- nou;
+      rela[anc,nou] <- rela[nou,anc] <- 0
+      orde <- c(orde,nou)
+      anc <- nou
     }
   }
   #
   if (mauvais) {
     if (order) {
-      res <- NULL;
+      res <- NULL
     } else {
-      res <- FALSE;
+      res <- FALSE
     }
   } else {
     if (!order) {
-      res <- TRUE;
+      res <- TRUE
     } else {
-      res <- orde;
+      res <- orde
     }
   }
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -933,7 +933,7 @@ nbn2chain <- function(nbn)
 #DETAILS
 # It is advised to use \code{is8nbn8chain} before
 # calling this function.
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{nbn}<< The /nbn/ object to consider.>>
 #[INPUTS]
@@ -954,72 +954,72 @@ nbn2chain <- function(nbn)
   # checking
   # <to be done for /nbn/>
   if (!is8nbn8chain(nbn)) {
-    r.erreur(nbn,message="This /nbn/ is not a /chain/");
+    r.erreur(nbn,message="This /nbn/ is not a /chain/")
   }
   # getting one of the two possible chain orders
-  ooo <- is8nbn8chain(nbn,TRUE);
+  ooo <- is8nbn8chain(nbn,TRUE)
   # building the chain except for correlations
-  res <- vector("list",0);
-  res$names <- names(nbn)[ooo];
-  res$sigma <- sapply(nbn,function(a){a$sigma;})[ooo];
-  res$mu    <- sapply(nbn,function(a){a$mu;})[ooo];
+  res <- vector("list",0)
+  res$names <- names(nbn)[ooo]
+  res$sigma <- sapply(nbn,function(a){a$sigma;})[ooo]
+  res$mu    <- sapply(nbn,function(a){a$mu;})[ooo]
   nbpa <- sapply(nbn,function(a){length(a$parents);})
-  nbpa <- nbpa[ooo];
-  res$roots <- res$names[which(nbpa==0)];
-  res$colliders <- res$names[which(nbpa==2)];
-  res$corre <- rep(0.5,length(res$names)-1);
+  nbpa <- nbpa[ooo]
+  res$roots <- res$names[which(nbpa==0)]
+  res$colliders <- res$names[which(nbpa==2)]
+  res$corre <- rep(0.5,length(res$names)-1)
   # getting a topological order
-  too <- order4chain(res);
-  res$corre <- rep(0.5,length(res$names)-1);
-  sig <- rep(NA,length(res$names));
+  too <- order4chain(res)
+  res$corre <- rep(0.5,length(res$names)-1)
+  sig <- rep(NA,length(res$names))
   # adding the correlations
   if (length(res$names)>1) {
     for (nnu in r.bf(res$names)) {
-      nnn <- too[nnu];
-      nna <- res$names[nnn];
+      nnn <- too[nnu]
+      nna <- res$names[nnn]
       if (!(nna %in% res$roots)) {
-        papa <- nbn[[nna]]$parents;
+        papa <- nbn[[nna]]$parents
         # computing the necessary standard deviations
-        sb <- res$sigma[nnn];
-        coco <- sasa <- numeric(0);
+        sb <- res$sigma[nnn]
+        coco <- sasa <- numeric(0)
         for (pn in r.bf(papa)) {
-          pp <- papa[pn];
-          reco <- nbn[[nna]]$regcoef[pn];
+          pp <- papa[pn]
+          reco <- nbn[[nna]]$regcoef[pn]
           if (nnn > 1) {if (res$names[nnn-1]==pp) {
-            sa <- sig[nnn-1];
-            sasa <- c(sasa,sa);
-            coco <- c(coco,reco);
+            sa <- sig[nnn-1]
+            sasa <- c(sasa,sa)
+            coco <- c(coco,reco)
           }}
           if (nnn < length(res$names)) {if (res$names[nnn+1]==pp) {
-            sa <- sig[nnn+1];
-            sasa <- c(sasa,sa);
-            coco <- c(coco,reco);
+            sa <- sig[nnn+1]
+            sasa <- c(sasa,sa)
+            coco <- c(coco,reco)
           }}
         }
         # getting the marginal variance
-        sb <- sqrt(sum(coco^2*sasa^2)+sb^2);
-        sig[nnn] <- sb;
+        sb <- sqrt(sum(coco^2*sasa^2)+sb^2)
+        sig[nnn] <- sb
         # computing the correlation(s)
         for (pn in r.bf(papa)) {
-          pp <- papa[pn];
-          reco <- nbn[[nna]]$regcoef[pn];
+          pp <- papa[pn]
+          reco <- nbn[[nna]]$regcoef[pn]
           if (nnn > 1) {if (res$names[nnn-1]==pp) {
-            sa <- sig[nnn-1];
-            res$corre[nnn-1] <- reco * sa / sb;
+            sa <- sig[nnn-1]
+            res$corre[nnn-1] <- reco * sa / sb
           }}
           if (nnn < length(res$names)) {if (res$names[nnn+1]==pp) {
-            sa <- sig[nnn+1];
-            res$corre[nnn] <-  reco * sa / sb;
+            sa <- sig[nnn+1]
+            res$corre[nnn] <-  reco * sa / sb
           }}
         }
       } else {
         # conditional and marginal variances are equal
-        sig[nnn] <- res$sigma[nnn];
+        sig[nnn] <- res$sigma[nnn]
       }
     }
   }
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -1037,7 +1037,7 @@ chain4chain <- function(chain,nodes,
 # the extracted chain nor being in the conditioning
 # subset. Then the distribution of the retained nodes
 # is left identical to this in the initial chain.
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{chain}<< The chain object to consider.>>
 #[INPUTS]
@@ -1051,7 +1051,7 @@ chain4chain <- function(chain,nodes,
 #VALUE
 # The resulting chain
 #EXAMPLE
-# chain4chain(rbmn0chain.02,c("a","d"),c("b"),12);
+# chain4chain(rbmn0chain.02,c("a","d"),c("b"),12)
 #REFERENCE
 #SEE ALSO
 #CALLING
@@ -1062,53 +1062,53 @@ chain4chain <- function(chain,nodes,
 #REVISED 11_02_08
 #--------------------------------------------
 {
-  return("This function is under construction!");
+  return("This function is under construction!")
   # checking
   # <to be done>
   # constants
-  nn <- length(chain$names);
+  nn <- length(chain$names)
   # each case in turn
-  fait <- FALSE;
+  fait <- FALSE
   if (is.null(head) & is.null(tail)) {
     # no condition
-    res <- chain;
-    fait <- TRUE;
+    res <- chain
+    fait <- TRUE
   }
   #
   if (!is.null(head) & !is.null(tail)) {
     # both conditioning
     if (nn < 3) {
-      res <- NULL;
+      res <- NULL
     } else {
-      res <- "'a faire";
-    fait <- TRUE;
+      res <- "'a faire"
+    fait <- TRUE
     }
   }
   #
   if (!fait) {
     if (nn < 2) {
-      res <- NULL;
+      res <- NULL
     } else {
       if (is.null(tail)) { chain <- reverse8chain(chain);}
       # condioning has to be done for the last node
       # looking for the last root
-      lro <- max(which(state4chain(chain)=="r"));
-      ncor <- aux8(chain$corre[r.bd(lro,nn)]);
-      ncor <- diag(ncor[-1,-(nn-lro),drop=FALSE]);
-      nmu <- chain$mu[-nn];
-      nsi <- chain$sigma[-nn];
+      lro <- max(which(state4chain(chain)=="r"))
+      ncor <- aux8(chain$corre[r.bd(lro,nn)])
+      ncor <- diag(ncor[-1,-(nn-lro),drop=FALSE])
+      nmu <- chain$mu[-nn]
+      nsi <- chain$sigma[-nn]
       res <- list(names=chain$names[-nn],
                   roots=chain$roots,
                   colliders=chain$colliders,
                   mu=nmu,
                   sigma=nsi,
                   corre=ncor
-                 );
-      fait <- TRUE;
+                 )
+      fait <- TRUE
       if (is.null(tail)) { res <- reverse8chain(res);}
     }
-  }      
+  }
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

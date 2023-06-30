@@ -56,14 +56,14 @@
 \details{
 
   \itemize{
-    \item \code{rbmn0chain.\#} objects are chain /nbn/ objects
-    \item \code{rbmn0nbn.\#} objects are general /nbn/ objects
-    \item \code{rbmn0adja.\#} objects are adjacency matrices
-    \item \code{rbmn0mn.\#} objects are /mn/ distributions
-    \item \code{rbmn0gema.\#} objects are /gema/ generating matrices
+    \item \code{rbmn0chain.#} objects are chain /nbn/ objects
+    \item \code{rbmn0nbn.#} objects are general /nbn/ objects
+    \item \code{rbmn0adja.#} objects are adjacency matrices
+    \item \code{rbmn0mn.#} objects are /mn/ distributions
+    \item \code{rbmn0gema.#} objects are /gema/ generating matrices
   }
 
-  Every last numbers (\#) refer to the same Gaussian Bayesian networks.
+  Every last numbers (#) refer to the same Gaussian Bayesian networks.
 }
 
 \author{ Jean-Baptiste Denis }

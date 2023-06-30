@@ -18,7 +18,7 @@
 \details{
 
   Some basic concepts:
-  
+
   \itemize{
     \item \emph{chain /nbn/s} are /nbn/s where all nodes are connected with two
     other nodes, except the two ending nodes of the chain having only one
@@ -26,7 +26,7 @@
     but I didn't find a more appropriate word: suggestions are welcome.)
     \item \emph{crossed /nbn/s} are /nbn/s having the node set defined as a
     Cartesian product of two series of items, and a DAG based on this
-    structure. See the \code{crossed4nbn1nbn} function and/or Tian (2013) for
+    structure. See the \code{crossed4nbn1nbn} function and/or Tian (2014) for
     details.
     \item An \emph{adjacency matrix} is a matrix equivalent to the DAG
     associated to a /nbn/. Its rows as well as its columns are associated
@@ -53,7 +53,7 @@
     normal random vector with expectation zero and variance matrix
     unity.
     \item  It is planned to add a fourth one under the name of /gbn/.
-    
+
   }
 
 
@@ -132,34 +132,27 @@
     \code{cor4var}.
     \item Add examples to all functions without any.
   }
-  
+
 }
 
 \author{
 
-  Jean-Baptiste Denis\cr
-  MIAj - Inra - Jouy-en-Josas \cr
-  F-78532 Jouy-en-Josas
-
-  Maintainer: Jean-Baptiste Denis \email{Jean-Baptiste.Denis@Jouy.Inra.Fr}
+  Original author: Jean-Baptiste Denis\cr
+  Maintainer: Marco Scutari
 
 }
-
-
 
 \references{
 
-  (A technical report presenting the concepts used in \pkg{rbmn} is
-  under redaction; it can be obtained as it is if asked.)
+  Scutari M (2010). "Learning Bayesian Networks with the bnlearn R Package".
+    Journal of Statistical Software, \strong{35}(3), 1-22.
 
-  Scutari M (2010). "Learning Bayesian Networks with the bnlearn R
-      Package". Journal of Statistical Software, \strong{35}(3),
-      1-22. URL http://www.jstatsoft.org/v35/i03/.
+  Tian S, Scutari M & Denis J-B (2014). "Predicting with Crossed Linear Gaussian
+    Bayesian Networks". Journal de la Societe Francaise de Statistique,
+    \strong{155}(3), 1-21.
 
-  Tian S, Scutari M & Denis J-B (2013, submitted to JSFdS). "Predicting
-      with Crossed Linear Gaussian Bayesian Networks".
 }
-      
+
 \examples{
 library(rbmn)
 

@@ -13,30 +13,31 @@ conditional distribution.
 mn4joint1condi(lmar, lcon)
 }
 \examples{
- lcon <- list(a=c(D=2, E=4), 
- b=matrix(1:6, 2, dimnames=list(LETTERS[4:5], 
- LETTERS[1:3])), 
+ lcon <- list(a=c(D=2, E=4),
+ b=matrix(1:6, 2, dimnames=list(LETTERS[4:5],
+ LETTERS[1:3])),
  S=matrix(c(1, 1, 1, 2), 2));
 
  print8mn(mn4joint1condi(rbmn0mn.01, lcon));
 }
 \arguments{
 \item{lmar}{ list defining the distribution of the marginal part with
-\code{$mu}, its expectation, and \code{$gamma}, its variance matrix
-(in fact a /mn/ object).}
+elements \code{mu}, its expectation, and \code{gamma}, its variance
+matrix (in fact a /mn/ object).}
 \item{lcon}{ list defining the distribution of the conditional part
 (see the \emph{Details} section).}
 }
 \details{
-The conditional distribution is defined with a list having \code{$a}
-for the constant part of the expectation; \code{$b} for the
-regression coefficient part of the expectation; and \code{$S} for the
+The conditional distribution is defined with a list with elements
+\code{a} for the constant part of the expectation; \code{b} for the
+regression coefficient part of the expectation; and \code{S} for the
 residual variance matrix.
 }
 \value{
-A list: 
+A list with elements:
 
-\item{\$mu}{The expectation vector.}
-\item{\$gamma}{The joint variance matrix.}
- that is a /mn/ object.
+\item{mu}{The expectation vector.}
+\item{gamma}{The joint variance matrix.}
+
+that is a /mn/ object.
 }

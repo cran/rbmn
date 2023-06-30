@@ -32,10 +32,10 @@ r.bc <- function(nb)
 {
 if (is.null(nb)) {return(numeric(0));}
 if (length(nb)!=1) {
-    r.erreur(nb,"r.bc deals only with scalar nb");
+    r.erreur(nb,"r.bc deals only with scalar nb")
 }
 if (nb > 0) {return(1:max(1,round(nb)));}
-numeric(0);
+numeric(0)
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -71,7 +71,7 @@ r.bd <- function(n1,n2)
 #--------------------------------------------
 {
 if (n1 <= n2) {return(n1:n2);}
-numeric(0);
+numeric(0)
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -108,7 +108,7 @@ r.bf <- function(x)
 #--------------------------------------------
 {
 if (length(x) > 0) { return(1:length(x));}
-numeric(0);
+numeric(0)
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -116,7 +116,7 @@ numeric(0);
 r.erreur <- function(x,...,w=FALSE)
 #TITLE  issues an error message and concludes accordingly
 #DESCRIPTION
-# when called this function prints x, then displays a message before stopping 
+# when called this function prints x, then displays a message before stopping
 # the process.
 #DETAILS
 #PKEYWORDS
@@ -127,7 +127,7 @@ r.erreur <- function(x,...,w=FALSE)
 #      of the list are successively printed.>>
 #{\dots}<<pieces of message to display after pasting>>
 #[INPUTS]
-#{w} << Indicates if it is a simple warning>> 
+#{w} << Indicates if it is a simple warning>>
 #VALUE
 # nothing is returned
 #EXAMPLE
@@ -144,18 +144,18 @@ r.erreur <- function(x,...,w=FALSE)
 #REVISED 13_04_29
 #--------------------------------------------
 {
-r.form3repeat("~",60,TRUE);
-print(x);
-message <- paste(...);
-cat("<<<<< MESSAGE >>>>>\n");
-print(message);
+r.form3repeat("~",60,TRUE)
+print(x)
+message <- paste(...)
+cat("<<<<< MESSAGE >>>>>\n")
+print(message)
 if (w) {
-    cat("SIMPLE WARNING:\n");
+    cat("SIMPLE WARNING:\n")
 } else {
-    on.exit(traceback());
+    on.exit(traceback())
 }
-r.form3repeat("~",60,TRUE);
-invisible();
+r.form3repeat("~",60,TRUE)
+invisible()
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -173,7 +173,7 @@ r.check4tyle <- function(x,typ,len=-1,con=numeric(0),
 # 'integer' has not got the meaning in \code{is.integer} R
 # standard function. 'null' must be understood as
 # resulting TRUE with function \code{is.null}.\cr
-# 'Named character' is different from  
+# 'Named character' is different from
 # 'character': \code{rbsb.chara} can be used for this purpose.
 #PKEYWORDS
 #KEYWORDS error
@@ -182,7 +182,7 @@ r.check4tyle <- function(x,typ,len=-1,con=numeric(0),
 #{typ} <<The list of correct types, among
 # 'null', 'integer', 'numeric', 'character',
 # 'logical', 'list', 'any', 'function', 'data.frame',
-# 'matrix'. Also are 'nlogical', 'ninteger', 'nnumeric' and 
+# 'matrix'. Also are 'nlogical', 'ninteger', 'nnumeric' and
 # 'ncharacter' for named structures.
 # As understood, 'any' implies that no
 # check of the type is performed.>>
@@ -195,7 +195,7 @@ r.check4tyle <- function(x,typ,len=-1,con=numeric(0),
 # When \code{na.rm} the check is made after
 # removing the NA values.>>
 #{con} << If \code{length(con)>0}, some check about
-# the content of \code{x} is done for some of the 
+# the content of \code{x} is done for some of the
 # types. More precisely for (integer, numeric): all
 # values must belong to the interval \code{[con[1],con[2]]}
 # and for (character), the set of possible \code{character(1)}
@@ -228,7 +228,7 @@ r.check4tyle <- function(x,typ,len=-1,con=numeric(0),
   # checking the arguments and preparation
   # accepted types by r.check4tyle
   # ....
-  invisible();
+  invisible()
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -266,7 +266,7 @@ r.form3justifie <- function(chaine,
 #EXAMPLE
 # r.form3justifie("vers")
 # r.form3justifie("versification",5)
-# r.form3justifie(letters[1:5],format=2,carac="+");
+# r.form3justifie(letters[1:5],format=2,carac="+")
 #REFERENCE
 #SEE ALSO
 #CALLING
@@ -281,66 +281,66 @@ r.form3justifie <- function(chaine,
 # the null case
 if (length(chaine)==0) { return(character(0));}
 # preparing
-nbc[nbc < 3] <- 8;
+nbc[nbc < 3] <- 8
 if (length(nbc) < length(chaine)) {
-    nnbc <- rep(nbc,length(chaine));
+    nnbc <- rep(nbc,length(chaine))
 } else {
-    nnbc <- nbc;
+    nnbc <- nbc
 }
 #
 itr <- "$"; # truncation indicator
-rres <- cchaine <- chaine;
+rres <- cchaine <- chaine
 for (rr in r.bf(rres)) {
-    res <- rres[rr];
-    nbc <- nnbc[rr];
-    chaine <- cchaine[rr];
+    res <- rres[rr]
+    nbc <- nnbc[rr]
+    chaine <- cchaine[rr]
     # truncation
     if ( (nchar(res) > nbc) & tronc ) {
      if (format <= 1) {
-      res <- substring(chaine,1,nbc);
-      res <- paste(res,itr,sep="");
+      res <- substring(chaine,1,nbc)
+      res <- paste(res,itr,sep="")
       }
      else {
       if (format == 2) {
-       otg <- (nchar(chaine) - nbc) %/% 2;
-       res <- substring(chaine,1+otg);
-       res <- substring(res,1,nbc);
-       res <- paste(itr,res,itr,sep="");
+       otg <- (nchar(chaine) - nbc) %/% 2
+       res <- substring(chaine,1+otg)
+       res <- substring(res,1,nbc)
+       res <- paste(itr,res,itr,sep="")
        }
       else {
        res <- substring(chaine,1+nchar(chaine)-nbc,
-			nchar(chaine));
-       res <- paste(itr,res,sep="");
+			nchar(chaine))
+       res <- paste(itr,res,sep="")
        }
       }
      }
     if ((nchar(res) < nbc) & (format != 0)) {
      if (format == 1) {
       while (nchar(res) < nbc) res <-
-	     paste(res,"",collapse="",sep=carac);
+	     paste(res,"",collapse="",sep=carac)
       }
      else {
       if (format == 2) {
-       raj <- (nbc - nchar(res)) %/% 2;
+       raj <- (nbc - nchar(res)) %/% 2
        if (raj > 0) {
 	for (jbd in 1:raj) res <-
-	 paste(res,"",collapse="",sep=carac);
+	 paste(res,"",collapse="",sep=carac)
 	}
        while (nchar(res) < nbc) {
-	res <- paste("",res,collapse="",sep=carac);
+	res <- paste("",res,collapse="",sep=carac)
 	}
        }
       else {
        while (nchar(res) < nbc) {
-	res <- paste("",res,collapse="",sep=carac);
+	res <- paste("",res,collapse="",sep=carac)
 	}
        }
       }
      }
-    rres[rr] <- res;
+    rres[rr] <- res
 }
 # returning
-rres;
+rres
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -349,7 +349,7 @@ r.form3names <- function(nbn,nom=character(0),prefix="",
                            upca=TRUE,nume=14)
 #TITLE  provides systematic names for items
 #DESCRIPTION
-# Provides systematic names for a series of items according their 
+# Provides systematic names for a series of items according their
 # number taking care of previous names.
 #DETAILS (see the code)
 #PKEYWORDS
@@ -360,7 +360,7 @@ r.form3names <- function(nbn,nom=character(0),prefix="",
 #{nom} << Already present names (to avoid identical names).>>
 #{prefix} << Systematic prefix of all names to generate. Must
 #                 comprise the dot, if one wants such a separator
-#                 between it and the specific part of the name. 
+#                 between it and the specific part of the name.
 #                 Of course can be 'underscore' or whatever else.>>
 #{upca} << Indicates whether the letters constituting the new
 #          names must be uppercase or not.>>
@@ -390,42 +390,42 @@ r.form3names <- function(nbn,nom=character(0),prefix="",
 {
 # checking
 #
-if (upca) { Letters <- LETTERS;
+if (upca) { Letters <- LETTERS
 } else { Letters <- letters;}
 #
 if (is.null(nbn)) { return(character(0));}
-if (nbn < 1) { return(character(0));
+if (nbn < 1) { return(character(0))
 } else {
     if (prefix != "") {
         # keeping only the names having got the prefix then
         # removing the prefixes from them (to be added further)
-        decom <- sapply(strsplit(nom,prefix),function(ll){length(ll);});
-        nom <- nom[decom == 2];
-        nom <- sapply(strsplit(nom,prefix),function(ll){ll[2];});
+        decom <- sapply(strsplit(nom,prefix),function(ll){length(ll);})
+        nom <- nom[decom == 2]
+        nom <- sapply(strsplit(nom,prefix),function(ll){ll[2];})
     }
     # looking for the maximum letter in noms
-    if ( length(nom) == 0 ) { mama <- 0;
+    if ( length(nom) == 0 ) { mama <- 0
     } else { mama <- max(1*outer(nom,Letters,"==") %*% matrix(1:26,ncol=1));}
     if ((nbn < (27-mama)) & (nume>0)) {
-        # adding letters 
-        res <- Letters[mama+(1:nbn)];
+        # adding letters
+        res <- Letters[mama+(1:nbn)]
     } else {
         # adding numbered nodes
-        ajou <- 0; nu <- 1; res <- character(0);
+        ajou <- 0; nu <- 1; res <- character(0)
         while ( ajou < nbn ) {
-          nono <- paste(Letters[abs(nume)],nu,sep="");
+          nono <- paste(Letters[abs(nume)],nu,sep="")
           if (all(nono != nom)) {
-              ajou <- ajou + 1;
-              res <- c(res,nono);
+              ajou <- ajou + 1
+              res <- c(res,nono)
           }
-          nu <- nu+1;
+          nu <- nu+1
         }
     }
 }
 # adding the prefix
-res <- paste(prefix,res,sep="");
+res <- paste(prefix,res,sep="")
 # returning
-res;
+res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -470,27 +470,27 @@ r.numero <- function(qui,dans,strict=TRUE,repe=TRUE)
 #--------------------------------------------
 {
 # checking
-qui  <- as.character(qui);
-dans <- as.character(dans);
+qui  <- as.character(qui)
+dans <- as.character(dans)
 if (strict) {
-    uu <- union(qui,dans);
+    uu <- union(qui,dans)
     if (length(uu)!=length(dans)) {
-        r.erreur(list(setdiff(uu,dans),dans),"Some identifiers does not belong to the list");
+        r.erreur(list(setdiff(uu,dans),dans),"Some identifiers does not belong to the list")
     }
 }
 # computing
-res <- as.numeric(outer(qui,dans,"==")%*%r.bf(dans));
-names(res) <- qui;
-res[res==0] <- NA;
+res <- as.numeric(outer(qui,dans,"==")%*%r.bf(dans))
+names(res) <- qui
+res[res==0] <- NA
 # repetitions
 if (!repe) {
-    rr <- res[!is.na(res)];
+    rr <- res[!is.na(res)]
     if (length(unique(rr)) < length(rr)) {
-        r.erreur(rr,"Some repetitions were found while forbidden!");
+        r.erreur(rr,"Some repetitions were found while forbidden!")
     }
-}  
+}
 # returning
-res;
+res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -499,7 +499,7 @@ r.expr3present <- function(sch,ch,exact=FALSE,how="a")
 #TITLE  indicates inclusion of character string
 #DESCRIPTION
 # Checks if some string(s) belong(s) to a series of strings.
-# When \code{exact} is FALSE, returns TRUE if the 
+# When \code{exact} is FALSE, returns TRUE if the
 # character string \code{sch} is included at least once
 # into the character string \code{ch}.\cr
 # \code{sch} can be a vector, in that case, the check is made for each
@@ -516,7 +516,7 @@ r.expr3present <- function(sch,ch,exact=FALSE,how="a")
 #[INPUTS]
 #{exact} << When exact, one component must
 # be strictly identical, if not a subtring is sufficient.>>
-#{how} << Indicates what to do when \code{length(sch)>1}. The choice are 
+#{how} << Indicates what to do when \code{length(sch)>1}. The choice are
 # \code{'v'}: a logical vector gives back each check independently;
 # \code{'1'}: returns \code{TRUE} when at least one of the component belongs
 # to the series \code{ch} and \code{'a'} when all components must comply to get TRUE.>>
@@ -543,20 +543,20 @@ if (length(sch)==0) { return(TRUE);}
 if (length( ch)==0) { return(FALSE);}
 #
 #
-res <- logical(length(sch));
+res <- logical(length(sch))
 #
 for (ii in r.bf(sch)) {
     if (exact) {
-        res[ii] <- sum(sch[ii]==ch) > 0;
+        res[ii] <- sum(sch[ii]==ch) > 0
     } else {
-        res[ii] <- length(grep(sch[ii],ch)) > 0;
+        res[ii] <- length(grep(sch[ii],ch)) > 0
     }
 }
 # dealing with scalar cases
 if (how == "1") { res <- any(res);}
 if (how == "a") { res <- all(res);}
 # returning
-res;
+res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -571,8 +571,8 @@ r.form3repeat <- function(cha="-",nb=10,imp=FALSE,cr=imp)
 #KEYWORDS print
 #INPUTS
 #[INPUTS]
-#{cha} << The string to repeat>> 
-#{nb} << Number of repetitions>> 
+#{cha} << The string to repeat>>
+#{nb} << Number of repetitions>>
 #{imp} << Printing when TRUE or returning (default)>>
 #{cr} << Must a line feed be added?>>
 #VALUE
@@ -589,12 +589,12 @@ r.form3repeat <- function(cha="-",nb=10,imp=FALSE,cr=imp)
 #REVISED 08_09_25
 #--------------------------------------------
 {
-nb <- max(0,round(nb));
-res <- "";
+nb <- max(0,round(nb))
+res <- ""
 for (jbd in r.bc(nb)) { res <- paste(res,cha,sep="");}
 if (cr) { res <- paste(res,"\n",sep="");}
 if(!imp) { return(res);}
-cat(res);
-invisible();
+cat(res)
+invisible()
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

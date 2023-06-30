@@ -1,6 +1,6 @@
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-bnfit2nbn <- function(bn.fit) 
+bnfit2nbn <- function(bn.fit)
 #TITLE transforms a /bn.fit/ of /bnlearn/ package to a /nbn/
 #DESCRIPTION returns a \code{nbn} object
 # from a Gaussian \code{bn.fit} object of /bnlearn/
@@ -8,7 +8,7 @@ bnfit2nbn <- function(bn.fit)
 #DETAILS
 # If \code{bn.fit} is not pertinent, a fatal error
 # is issued.
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{bn.fit}<< The object to be transformed.>>
 #[INPUTS]
@@ -27,41 +27,41 @@ bnfit2nbn <- function(bn.fit)
 {
   # checking
   if (!inherits(bn.fit, "bn.fit")) {
-    r.erreur(bn.fit,message="This object is not of class 'bn.fit'");
+    r.erreur(bn.fit,message="This object is not of class 'bn.fit'")
   }
   # initializing the resulting object
-  res <- vector("list",length(bn.fit));
-  names(res) <- names(bn.fit);
+  res <- vector("list",length(bn.fit))
+  names(res) <- names(bn.fit)
   # filling each node
   for (nn in r.bf(res)) {
-    sigma <- bn.fit[[nn]]$sd;
-    bnc <- bn.fit[[nn]]$coefficients;
-    mui <- which(names(bnc)=="(Intercept)");
+    sigma <- bn.fit[[nn]]$sd
+    bnc <- bn.fit[[nn]]$coefficients
+    mui <- which(names(bnc)=="(Intercept)")
     if (length(mui)!=1) {
       r.erreur(list(nn,bn.fit[[nn]]),
-             message="unexpected node of 'bn.fit'");
+             message="unexpected node of 'bn.fit'")
     }
-    mu <- bnc[mui];
-    parents <- names(bnc)[-mui];
-    regcoef <- bnc[-mui];
-    res[[nn]] <- list(mu=mu,sigma=sigma,parents=parents,regcoef=regcoef);
+    mu <- bnc[mui]
+    parents <- names(bnc)[-mui]
+    regcoef <- bnc[-mui]
+    res[[nn]] <- list(mu=mu,sigma=sigma,parents=parents,regcoef=regcoef)
   }
   # providing the topological order
-  tor <- order4nbn(res);
-  res <- res[tor];
+  tor <- order4nbn(res)
+  res <- res[tor]
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-bn2nbn <- function(bn) 
+bn2nbn <- function(bn)
 #TITLE transforms a /bn/ of /bnlearn/ package to a /nbn/
 #DESCRIPTION returns a \code{nbn} object
 # from a DAG (\code{bn} object) of /bnlearn/
 # package. O and 1 coefficients are introduced...
 #DETAILS
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{bn}<< The object to be transformed.>>
 #[INPUTS]
@@ -80,36 +80,36 @@ bn2nbn <- function(bn)
 {
   # checking
   if (!inherits(bn, "bn")) {
-    r.erreur(bn,message="This object is not of class 'bn'");
+    r.erreur(bn,message="This object is not of class 'bn'")
   }
   nono <- bn$nodes
   # initializing the resulting object
-  res <- vector("list",length(nono));
-  names(res) <- names(nono);
+  res <- vector("list",length(nono))
+  names(res) <- names(nono)
   # filling each node
   for (nn in names(res)) {
-    sigma <- 1;
-    mu <- 0;
-    parents <- nono[[nn]]$parents;
-    regcoef <- rep(1,length(parents));
-    res[[nn]] <- list(mu=mu,sigma=sigma,parents=parents,regcoef=regcoef);
+    sigma <- 1
+    mu <- 0
+    parents <- nono[[nn]]$parents
+    regcoef <- rep(1,length(parents))
+    res[[nn]] <- list(mu=mu,sigma=sigma,parents=parents,regcoef=regcoef)
   }
   # providing a topological order
-  tor <- order4nbn(res);
-  res <- res[tor];
+  tor <- order4nbn(res)
+  res <- res[tor]
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-nbn2bnfit <- function(nbn,onlydag=FALSE) 
+nbn2bnfit <- function(nbn,onlydag=FALSE)
 #TITLE transforms a /nbn/ to a /bn.fit/ of /bnlearn/ package
 #DESCRIPTION returns a \code{bn.fit} object
 # from a Gaussian \code{nbn} object of /rbmn/
 # package.
 #DETAILS
-#KEYWORDS 
+#KEYWORDS
 #INPUTS
 #{nbn}<< The object to be transformed.>>
 #[INPUTS]
@@ -132,25 +132,25 @@ nbn2bnfit <- function(nbn,onlydag=FALSE)
   if (!requireNamespace("bnlearn"))
     stop("this function requires the bnlearn package.")
   # creating the dag
-  mod <- string7dag4nbn(nbn,":");
-  dag <- bnlearn::model2network(mod);
+  mod <- string7dag4nbn(nbn,":")
+  dag <- bnlearn::model2network(mod)
   if (onlydag) { return(dag);}
   # incorporating the parameters
-  prodis <- vector("list",0);
+  prodis <- vector("list",0)
   for (nn in r.bf(nbn)) {
-    para <- vector("list",0);
-    para$coef <- c(nbn[[nn]]$mu);
+    para <- vector("list",0)
+    para$coef <- c(nbn[[nn]]$mu)
     for (pp in r.bf(nbn[[nn]]$parents)) {
-      para$coef <- c(para$coef,nbn[[nn]]$regcoef[pp]);
+      para$coef <- c(para$coef,nbn[[nn]]$regcoef[pp])
     }
-    names(para$coef) <- c("(Intercept)",nbn[[nn]]$parents);
-    para$sd <- nbn[[nn]]$sigma;
-    prodis[[nn]] <- para;
+    names(para$coef) <- c("(Intercept)",nbn[[nn]]$parents)
+    para$sd <- nbn[[nn]]$sigma
+    prodis[[nn]] <- para
   }
-  names(prodis) <- names(nbn);
+  names(prodis) <- names(nbn)
   # creating the bnfit
-  res <- bnlearn::custom.fit(dag,dist=prodis);
+  res <- bnlearn::custom.fit(dag,dist=prodis)
   # returning
-  res;
+  res
 }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
